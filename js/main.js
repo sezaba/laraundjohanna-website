@@ -39,11 +39,14 @@
   /* ---------- Mobiles Menü ---------- */
   var menuBtn = $('menu-btn');
   var nav = $('hauptnav');
+  function syncScrollLock() {
+    body.classList.toggle('no-scroll', !!document.querySelector('dialog[open]') || nav.classList.contains('is-open'));
+  }
   function setMenu(open) {
     nav.classList.toggle('is-open', open);
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     menuBtn.querySelector('.menu-btn__label').textContent = open ? 'Schließen' : 'Menü';
-    body.classList.toggle('no-scroll', open);
+    syncScrollLock();
     body.classList.toggle('menu-open', open);
   }
   menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('is-open')); });
@@ -75,8 +78,9 @@
       lbImg.alt = img.alt;
       lbCap.textContent = tile.querySelector('figcaption').textContent;
       lb.classList.add('is-open');
-      body.classList.add('no-scroll');
-      lb.querySelector('[data-close]').focus();
+      lb.showModal();
+      syncScrollLock();
+      lb.querySelector('[data-close]').focus({ preventScroll: true });
     }
     tile.addEventListener('click', open);
     tile.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
@@ -84,7 +88,8 @@
   function closeLightbox() {
     if (!lb.classList.contains('is-open')) return;
     lb.classList.remove('is-open');
-    body.classList.remove('no-scroll');
+    lb.close();
+    syncScrollLock();
     if (lastFocus) lastFocus.focus();
   }
   lb.addEventListener('click', function (e) { if (e.target === lb || e.target.closest('[data-close]')) closeLightbox(); });
@@ -197,16 +202,16 @@
     var t = tabIndexByKey(o.key);
     var faq = $('pop-faq');
     faq.textContent = D.tabs[t].qa.length + ' Fragen & Antworten zu ' + o.name + ' →';
-    faq.onclick = function () { selectTab(t); closePop(); };
-    pop.hidden = false;
-    body.classList.add('no-scroll');
+    faq.onclick = function () { selectTab(t); closePop(); tabBtns[t].focus({ preventScroll: true }); };
+    pop.showModal();
+    syncScrollLock();
     popBox.scrollTop = 0;
-    popBox.focus();
+    popBox.focus({ preventScroll: true });
   }
   function closePop() {
-    if (pop.hidden) return;
-    pop.hidden = true;
-    body.classList.remove('no-scroll');
+    if (!pop.open) return;
+    pop.close();
+    syncScrollLock();
     if (popOpener && document.contains(popOpener)) popOpener.focus({ preventScroll: true });
   }
   pop.addEventListener('click', function (e) { if (e.target === pop || e.target.closest('[data-close]')) closePop(); });
@@ -242,8 +247,9 @@
   tabsEl.addEventListener('keydown', function (e) {
     var cur = tabBtns.indexOf(document.activeElement);
     if (cur < 0) return;
-    var next = e.key === 'ArrowRight' ? cur + 1 : e.key === 'ArrowLeft' ? cur - 1 : null;
+    var next = e.key === 'ArrowRight' ? cur + 1 : e.key === 'ArrowLeft' ? cur - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabBtns.length - 1 : null;
     if (next === null) return;
+    e.preventDefault();
     next = (next + tabBtns.length) % tabBtns.length;
     selectTab(next);
     tabBtns[next].focus();
@@ -267,20 +273,21 @@
   }
   function openKontakt(anliegen, opener) {
     kOpener = opener || null;
-    if (!kDanke.hidden) { kform.reset(); kform.hidden = false; kDanke.hidden = true; }
+    kform.hidden = false;
+    kDanke.hidden = true;
     kform.classList.remove('is-checked');
     kFehler.hidden = true;
     fillSelect(anliegen);
-    kpop.hidden = false;
-    body.classList.add('no-scroll');
+    kpop.showModal();
+    syncScrollLock();
     kbox.scrollTop = 0;
     var first = kform.querySelector('input[name=name]');
-    if (window.matchMedia('(pointer: fine)').matches) first.focus(); else kbox.focus();
+    if (window.matchMedia('(pointer: fine)').matches) first.focus({ preventScroll: true }); else kbox.focus({ preventScroll: true });
   }
   function closeKontakt() {
-    if (kpop.hidden) return;
-    kpop.hidden = true;
-    body.classList.remove('no-scroll');
+    if (!kpop.open) return;
+    kpop.close();
+    syncScrollLock();
     if (kOpener && document.contains(kOpener)) kOpener.focus({ preventScroll: true });
   }
   kpop.addEventListener('click', function (e) { if (e.target === kpop || e.target.closest('[data-close]')) closeKontakt(); });
@@ -292,12 +299,23 @@
     openKontakt(a.getAttribute('data-kontakt'), a);
   });
 
-  function danke(text) {
-    $('kform-danke-text').textContent = text;
-    kform.hidden = true;
-    kDanke.hidden = false;
-    kDanke.querySelector('[data-close]').focus();
-  }
+  var preview = $('kform-vorschau');
+  var copyStatus = $('kform-status');
+  $('kform-bearbeiten').addEventListener('click', function () {
+    kDanke.hidden = true;
+    kform.hidden = false;
+    kform.querySelector('input[name=name]').focus();
+  });
+  $('kform-kopieren').addEventListener('click', async function () {
+    try {
+      await navigator.clipboard.writeText(preview.value);
+      copyStatus.textContent = 'Kopiert. Fügt die Nachricht in eurem E-Mail-Postfach ein und sendet sie an hallo@laraundjohanna.de.';
+    } catch (error) {
+      preview.focus();
+      preview.select();
+      copyStatus.textContent = 'Bitte kopiert den markierten Text mit Strg+C oder ⌘C und fügt ihn in eurem E-Mail-Postfach ein.';
+    }
+  });
   kform.addEventListener('submit', function (e) {
     e.preventDefault();
     kform.classList.add('is-checked');
@@ -310,38 +328,28 @@
     }
     kFehler.hidden = true;
     var f = new FormData(kform);
-    if (f.get('_gotcha')) return; // Spam-Schutz
-    var endpoint = kform.getAttribute('data-endpoint');
-    if (!endpoint) {
-      // Kein Formular-Dienst eingetragen: E-Mail-Programm mit fertiger Nachricht öffnen
-      var text = 'Name: ' + f.get('name') + '\nE-Mail: ' + f.get('email') +
-        (f.get('unternehmen') ? '\nUnternehmen: ' + f.get('unternehmen') : '') +
-        '\nAnliegen: ' + f.get('anliegen') + '\nGespräch: ' + f.get('termin') + '\n\n' + f.get('nachricht');
-      location.href = 'mailto:' + kform.getAttribute('data-mail') +
-        '?subject=' + encodeURIComponent('Anfrage: ' + f.get('anliegen')) + '&body=' + encodeURIComponent(text);
-      danke('Euer E-Mail-Programm öffnet sich mit der fertigen Nachricht. Klickt dort einfach noch auf Senden.');
-      return;
-    }
-    var submit = kform.querySelector('[type=submit]');
-    submit.disabled = true;
-    f.delete('_gotcha');
-    f.delete('datenschutz');
-    fetch(endpoint, { method: 'POST', body: f, headers: { Accept: 'application/json' } })
-      .then(function (r) { if (!r.ok) throw new Error(r.status); danke('Wir haben eure Nachricht und melden uns innerhalb von zwei Werktagen.'); })
-      .catch(function () {
-        kFehler.textContent = 'Das hat leider nicht geklappt. Bitte versucht es noch einmal oder schreibt uns direkt an ' + kform.getAttribute('data-mail') + '.';
-        kFehler.hidden = false;
-      })
-      .then(function () { submit.disabled = false; });
+    var text = 'Name: ' + f.get('name') + '\nE-Mail: ' + f.get('email') +
+      (f.get('unternehmen') ? '\nUnternehmen: ' + f.get('unternehmen') : '') +
+      '\nAnliegen: ' + f.get('anliegen') + '\nGespräch: ' + f.get('termin') + '\n\n' + f.get('nachricht');
+    var subject = 'Anfrage: ' + f.get('anliegen');
+    var mail = kform.getAttribute('data-mail');
+    $('kform-mail').href = 'mailto:' + mail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
+    preview.value = 'An: ' + mail + '\nBetreff: ' + subject + '\n\n' + text;
+    copyStatus.textContent = '';
+    kform.hidden = true;
+    kDanke.hidden = false;
+    $('kform-vorschau-titel').focus();
   });
 
-  /* ---------- Escape schließt Overlays ---------- */
+  /* Native modale Dialoge halten den Fokus im obersten Fenster. */
+  [[pop, closePop], [kpop, closeKontakt], [lb, closeLightbox]].forEach(function (entry) {
+    entry[0].addEventListener('cancel', function (e) { e.preventDefault(); entry[1](); });
+  });
   document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
-    closeKontakt();
-    closePop();
-    closeLightbox();
-    if (nav.classList.contains('is-open')) { setMenu(false); menuBtn.focus(); }
+    if (e.key === 'Escape' && !document.querySelector('dialog[open]') && nav.classList.contains('is-open')) {
+      setMenu(false);
+      menuBtn.focus();
+    }
   });
 
   var jahr = $('jahr');
