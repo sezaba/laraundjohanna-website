@@ -3,7 +3,7 @@
 Öffentliche Coming-soon-Website der laraundjohanna GbR.
 
 Live: https://laraundjohanna.de
-Hosting: Cloudflare Pages, bestehendes Projekt `lara-und-johanna`.
+Hosting: Cloudflare Pages, Projekt `laraundjohanna-website`.
 
 ## Dateien
 
@@ -11,6 +11,7 @@ Hosting: Cloudflare Pages, bestehendes Projekt `lara-und-johanna`.
 - `impressum.html` und `datenschutz.html`: Rechteseiten.
 - `fonts.css`, `*.ttf`: lokal bereitgestellte Schriften Anton und Space Grotesk; Lizenzen in `OFL-*.txt`.
 - `react.js`, `react-dom.js`, `support.js`: lokaler Darstellungsruntime des Design-Exports.
+- `Sonne.dc.html` und `Mond.dc.html`: Komponenten der Animation.
 - `legal.css`: responsive Gestaltung der Rechteseiten.
 
 ## Lokal ansehen
@@ -19,11 +20,19 @@ Hosting: Cloudflare Pages, bestehendes Projekt `lara-und-johanna`.
 python3 -m http.server 8080
 ```
 
-## Veröffentlichung
+## Automatische Veröffentlichung
 
-Das bestehende Cloudflare-Pages-Projekt verwendet Direct Upload. Die Website-Dateien aus diesem Repository als ZIP (mit `index.html` direkt im ZIP-Stamm) über **Create deployment → Production** hochladen. Es ist kein Build erforderlich.
+Cloudflare Pages ist direkt mit diesem GitHub-Repository verbunden. Jeder Push bzw. Merge auf `main` startet automatisch eine neue Produktionsveröffentlichung. Nach einem erfolgreichen Deployment sind die Änderungen auf https://laraundjohanna.de live.
 
-Das öffentliche GitHub-Repository ist keine automatische Deployment-Verbindung. Änderungen werden erst nach einem Cloudflare-Upload live. Bestehende Domain- und E-Mail-Einstellungen beibehalten.
+- Produktionsbranch: `main`
+- Framework: None (statisches HTML)
+- Build-Befehl: `exit 0`
+- Ausgabeverzeichnis: `.` (Repository-Stamm)
+- Pages-Adresse: https://laraundjohanna-website.pages.dev
+
+Änderungen lassen sich über Branch und Pull Request vorbereiten. Der Merge auf `main` veröffentlicht sie automatisch. Den Status zeigen Cloudflare unter **Deployments** und die GitHub-Commit-Checks.
+
+Manuelle ZIP-Uploads sind nicht mehr erforderlich. Das frühere Direct-Upload-Projekt `lara-und-johanna` ist nicht mehr der Veröffentlichungsweg. Bestehende Domain- und IONOS-E-Mail-Einstellungen beibehalten.
 
 ## Pflege
 
