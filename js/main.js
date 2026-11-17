@@ -36,6 +36,16 @@
     setNight(!site.classList.contains('theme-nacht'), true);
   });
 
+  // Jede Sonne/jeder Mond (Logo oben, Erstgespräch, Kontakt, Fußzeile) wechselt Tag und Nacht.
+  // Abfangen in der Capture-Phase, damit der Klick nicht zusätzlich den Link oder die Kachel auslöst.
+  document.addEventListener('click', function (e) {
+    var coin = e.target.closest && e.target.closest('.coin');
+    if (!coin) return;
+    e.preventDefault();
+    e.stopPropagation();
+    modeBtn.click();
+  }, true);
+
   // Sonne im Hero antippen = Tag/Nacht wechseln (wie der Button in der Navigation)
   var sonne = $('sonne');
   if (sonne) {

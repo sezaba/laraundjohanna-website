@@ -6,7 +6,7 @@
 
   var DATEIEN = ['assets/sounds/klick-1.wav', 'assets/sounds/klick-2.wav'];
   var LAUTSTAERKE = 0.5;
-  var ZIELE = 'button, .btn, .kachel, [role="button"], [role="tab"]';
+  var ZIELE = 'button, .btn, .kachel, .coin, [role="button"], [role="tab"]';
 
   var AC = window.AudioContext || window.webkitAudioContext;
   if (!AC || !window.fetch) return;

@@ -540,3 +540,6 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
   .angebote{padding-bottom:56px}
   .ueber{padding-top:56px}
 }
+
+/* Jede Sonne/jeder Mond ist antippbar und wechselt Tag und Nacht */
+.coin{cursor:pointer;-webkit-tap-highlight-color:transparent}
