@@ -166,7 +166,7 @@ section,.footer{transition:background-color .7s ease}
 .tile figcaption span{background:#fff;color:#25252D;border:2px solid #000;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500;transform:translateY(14px);opacity:0;transition:.3s ease}
 .tile:hover figcaption span{transform:none;opacity:1}
 .tile.is-empty figcaption{display:none}
-.gal-pfeile{display:none}
+.gal-pfeil{display:none}
 .gal-wrap{position:relative}
 /* Mobil: Galerie als Karussell zum Wischen, immer ein Bild sichtbar */
 @media (max-width:900px){
@@ -183,14 +183,15 @@ section,.footer{transition:background-color .7s ease}
   .gal .tile figcaption{position:static;display:block;margin-top:12px;pointer-events:auto}
   .gal .tile figcaption span{display:block;padding:0;border:0;border-radius:0;background:none;color:var(--muted);
     opacity:.7;transform:none;font-size:12px;font-weight:400;letter-spacing:.02em}
-  /* Kleine Pfeile links und rechts, mittig auf dem Bild */
-  .gal-pfeile{position:absolute;top:0;left:0;width:calc(100% - 8px);aspect-ratio:4 / 5;display:flex;
-    align-items:center;justify-content:space-between;padding:0 10px;pointer-events:none}
-  .gal-pfeil{pointer-events:auto;display:grid;place-items:center;width:34px;height:34px;padding:0;
+  /* Pfeile neben dem Bild, nicht darauf */
+  .gal-wrap{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;column-gap:8px;align-items:center}
+  .gal-wrap .gal{grid-column:2;grid-row:1}
+  .gal-pfeil{display:grid;place-items:center;width:30px;height:30px;padding:0;margin-bottom:30px;
     border:2px solid var(--hard);border-radius:50%;background:var(--page);color:var(--ink);cursor:pointer;
-    box-shadow:2px 2px 0 var(--hard);transition:opacity .2s,box-shadow .15s}
+    box-shadow:2px 2px 0 var(--hard);transition:box-shadow .15s}
   .gal-pfeil:active{box-shadow:0 0 0 var(--hard)}
-  .gal-pfeil[disabled]{opacity:0;pointer-events:none}
+  #gal-zurueck{grid-column:1;grid-row:1}
+  #gal-weiter{grid-column:3;grid-row:1}
 }
 .lightbox{position:fixed;inset:0;z-index:200;background:rgba(37,37,45,.92);display:none;align-items:center;justify-content:center;padding:32px}
 .lightbox.is-open{display:flex}

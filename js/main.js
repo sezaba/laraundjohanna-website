@@ -64,27 +64,63 @@
 
   /* ---------- Galerie: mobil aufklappen + Lightbox ---------- */
   var gal = $('gal');
-  // Mobil: kleine Pfeile links und rechts blättern ein Bild weiter
+  // Mobil: Endlos-Karussell. Vor und hinter die echten Bilder kommt je eine Kopie aller Bilder.
+  // Landet man nach dem Wischen in einer Kopie, springt das Karussell unsichtbar zum passenden echten Bild.
   var galTiles = Array.prototype.slice.call(gal.querySelectorAll('.tile'));
-  var pfeilZurueck = $('gal-zurueck');
-  var pfeilWeiter = $('gal-weiter');
+  var galN = galTiles.length;
+  var galKarussell = window.matchMedia('(max-width: 900px)');
+  var galKlone = [];
+  function galSlides() { return gal.querySelectorAll('.tile'); }
   function galSchritt() {
-    return galTiles.length > 1 ? galTiles[1].offsetLeft - galTiles[0].offsetLeft : gal.clientWidth;
+    var s = galSlides();
+    return s.length > 1 ? s[1].offsetLeft - s[0].offsetLeft : gal.clientWidth;
   }
   function galIndex() { return Math.round(gal.scrollLeft / (galSchritt() || 1)); }
-  function galGehe(i) {
-    i = Math.max(0, Math.min(galTiles.length - 1, i));
-    gal.scrollTo({ left: i * galSchritt(), behavior: 'smooth' });
+  function galSpringe(i) { gal.scrollTo({ left: i * galSchritt(), behavior: 'instant' }); }
+  function galKlon(tile) {
+    var k = tile.cloneNode(true);
+    k.classList.add('is-klon');
+    k.setAttribute('aria-hidden', 'true');
+    k.removeAttribute('tabindex');
+    k.removeAttribute('role');
+    k.removeAttribute('aria-label');
+    var img = k.querySelector('img');
+    if (img) img.loading = 'lazy';
+    galKlone.push(k);
+    return k;
   }
-  function pfeileAktualisieren() {
+  function galEndlosAn() {
+    if (galKlone.length || galN < 2) return;
+    var vorne = document.createDocumentFragment();
+    galTiles.forEach(function (t) { vorne.appendChild(galKlon(t)); });
+    gal.insertBefore(vorne, gal.firstChild);
+    galTiles.forEach(function (t) { gal.appendChild(galKlon(t)); });
+    galSpringe(galN);
+  }
+  function galEndlosAus() {
+    galKlone.forEach(function (k) { k.remove(); });
+    galKlone = [];
+    gal.scrollLeft = 0;
+  }
+  function galZurechtruecken() {
+    if (!galKlone.length) return;
     var i = galIndex();
-    pfeilZurueck.disabled = i <= 0;
-    pfeilWeiter.disabled = i >= galTiles.length - 1;
+    if (i < galN) galSpringe(i + galN);
+    else if (i >= 2 * galN) galSpringe(i - galN);
   }
-  pfeilZurueck.addEventListener('click', function () { galGehe(galIndex() - 1); });
-  pfeilWeiter.addEventListener('click', function () { galGehe(galIndex() + 1); });
-  gal.addEventListener('scroll', function () { window.requestAnimationFrame(pfeileAktualisieren); }, { passive: true });
-  pfeileAktualisieren();
+  function galModusKarussell() { if (galKarussell.matches) galEndlosAn(); else galEndlosAus(); }
+  galModusKarussell();
+  if (galKarussell.addEventListener) galKarussell.addEventListener('change', galModusKarussell);
+  window.addEventListener('resize', function () { if (galKlone.length) galSpringe(galIndex()); });
+
+  // Ende des Wischens erkennen: scrollend, wo vorhanden, sonst kurze Pause im Scrollen
+  var galRuhe = null;
+  if ('onscrollend' in window) gal.addEventListener('scrollend', galZurechtruecken);
+  else gal.addEventListener('scroll', function () { clearTimeout(galRuhe); galRuhe = setTimeout(galZurechtruecken, 140); }, { passive: true });
+
+  // Kleine Pfeile neben dem Bild blättern ein Bild weiter, ohne Anfang und Ende
+  $('gal-zurueck').addEventListener('click', function () { gal.scrollBy({ left: -galSchritt(), behavior: 'smooth' }); });
+  $('gal-weiter').addEventListener('click', function () { gal.scrollBy({ left: galSchritt(), behavior: 'smooth' }); });
 
   var lb = $('lightbox');
   var lbImg = $('lightbox-img');
