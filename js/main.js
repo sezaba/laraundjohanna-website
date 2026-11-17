@@ -36,6 +36,15 @@
     setNight(!site.classList.contains('theme-nacht'), true);
   });
 
+  // Sonne im Hero antippen = Tag/Nacht wechseln (wie der Button in der Navigation)
+  var sonne = $('sonne');
+  if (sonne) {
+    sonne.addEventListener('click', function () { modeBtn.click(); });
+    sonne.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); modeBtn.click(); }
+    });
+  }
+
   /* ---------- Mobiles Menü ---------- */
   var menuBtn = $('menu-btn');
   var nav = $('hauptnav');
@@ -55,13 +64,24 @@
 
   /* ---------- Galerie: mobil aufklappen + Lightbox ---------- */
   var gal = $('gal');
-  var galMore = $('gal-more');
-  galMore.addEventListener('click', function () {
-    var open = !gal.classList.contains('is-open');
-    gal.classList.toggle('is-open', open);
-    galMore.setAttribute('aria-expanded', open ? 'true' : 'false');
-    galMore.textContent = open ? 'Weniger anzeigen' : 'Ganze Galerie ansehen';
+  // Mobil: Punkte unter dem Karussell zeigen, welches Bild gerade sichtbar ist
+  var galTiles = Array.prototype.slice.call(gal.querySelectorAll('.tile'));
+  var dotsEl = $('gal-dots');
+  var dots = galTiles.map(function (tile, i) {
+    var d = el('button');
+    d.type = 'button';
+    d.setAttribute('aria-label', 'Bild ' + (i + 1) + ' von ' + galTiles.length);
+    d.addEventListener('click', function () { gal.scrollTo({ left: tile.offsetLeft - gal.offsetLeft, behavior: 'smooth' }); });
+    dotsEl.appendChild(d);
+    return d;
   });
+  function updateDots() {
+    var step = galTiles.length > 1 ? galTiles[1].offsetLeft - galTiles[0].offsetLeft : 1;
+    var cur = Math.round(gal.scrollLeft / (step || 1));
+    dots.forEach(function (d, i) { d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
+  }
+  gal.addEventListener('scroll', function () { window.requestAnimationFrame(updateDots); }, { passive: true });
+  updateDots();
 
   var lb = $('lightbox');
   var lbImg = $('lightbox-img');
@@ -125,6 +145,26 @@
     footerList.appendChild(li);
   });
 
+  /* ---------- Zurück-Taste/Wischgeste schließt Popups ---------- */
+  var histOffen = false, histIgnorieren = false;
+  function histOpen() {
+    if (histOffen) history.replaceState({ lj: 1 }, '');
+    else { history.pushState({ lj: 1 }, ''); histOffen = true; }
+  }
+  function histClose() {
+    if (!histOffen) return;
+    histOffen = false;
+    histIgnorieren = true;
+    history.back();
+  }
+  window.addEventListener('popstate', function () {
+    if (histIgnorieren) { histIgnorieren = false; return; }
+    if (!histOffen) return;
+    histOffen = false;
+    closeKontakt(true);
+    closePop(true);
+  });
+
   /* ---------- Paket-Popup ---------- */
   var pop = $('pop');
   var popBox = $('pop-box');
@@ -149,7 +189,7 @@
       cta.onclick = function (e) {
         e.preventDefault();
         var back = popOpener;
-        closePop();
+        closePop(false, true);
         openKontakt(o.name + ': ' + o.cta.replace(/ anfragen$/, ''), back);
       };
     }
@@ -189,7 +229,7 @@
       } else btn.addEventListener('click', function (e) {
         e.preventDefault();
         var back = popOpener;
-        closePop();
+        closePop(false, true);
         openKontakt(p.anfrage || (o.name + ': ' + p.name + ' (' + p.price.replace('*', '') + ')'), back);
       });
       pk.appendChild(btn);
@@ -202,15 +242,26 @@
     var t = tabIndexByKey(o.key);
     var faq = $('pop-faq');
     faq.textContent = D.tabs[t].qa.length + ' Fragen & Antworten zu ' + o.name + ' →';
-    faq.onclick = function () { selectTab(t); closePop(); tabBtns[t].focus({ preventScroll: true }); };
+    faq.onclick = function (e) {
+      e.preventDefault();
+      selectTab(t);
+      closePop();
+      setTimeout(function () {
+        document.getElementById('fragen').scrollIntoView({ behavior: 'smooth' });
+        tabBtns[t].focus({ preventScroll: true });
+      }, 60);
+    };
     pop.showModal();
+    histOpen();
     syncScrollLock();
     popBox.scrollTop = 0;
     popBox.focus({ preventScroll: true });
   }
-  function closePop() {
+  // vonVerlauf: durch Zurück-Taste ausgelöst; behalten: direkt danach öffnet ein anderes Popup
+  function closePop(vonVerlauf, behalten) {
     if (!pop.open) return;
     pop.close();
+    if (!vonVerlauf && !behalten) histClose();
     syncScrollLock();
     if (popOpener && document.contains(popOpener)) popOpener.focus({ preventScroll: true });
   }
@@ -281,14 +332,16 @@
     kFehler.hidden = true;
     if (!kSending) fillSelect(anliegen);
     kpop.showModal();
+    histOpen();
     syncScrollLock();
     kbox.scrollTop = 0;
     var first = kform.querySelector('input[name=name]');
     if (!kSending && window.matchMedia('(pointer: fine)').matches) first.focus({ preventScroll: true }); else kbox.focus({ preventScroll: true });
   }
-  function closeKontakt() {
+  function closeKontakt(vonVerlauf) {
     if (!kpop.open) return;
     kpop.close();
+    if (!vonVerlauf) histClose();
     syncScrollLock();
     if (kOpener && document.contains(kOpener)) kOpener.focus({ preventScroll: true });
   }

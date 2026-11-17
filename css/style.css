@@ -166,20 +166,22 @@ section,.footer{transition:background-color .7s ease}
 .tile figcaption span{background:#fff;color:#25252D;border:2px solid #000;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500;transform:translateY(14px);opacity:0;transition:.3s ease}
 .tile:hover figcaption span{transform:none;opacity:1}
 .tile.is-empty figcaption{display:none}
-.gal-more{display:none;margin-top:28px}
+.gal-dots{display:none}
+/* Mobil: Galerie als Karussell zum Wischen, immer ein Bild sichtbar */
 @media (max-width:900px){
-  .gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .gal{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    padding:0 8px 12px 0;margin-right:-8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .gal::-webkit-scrollbar{display:none}
   .gcol{display:contents}
-  .tile figcaption span{opacity:1;transform:none;font-size:12px}
-  /* Mobil: nur 3 Vorschaubilder */
-  .gal:not(.is-open){grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-  .gal:not(.is-open) .tile:not(.tile--preview){display:none}
-  .gal:not(.is-open) .tile--preview{aspect-ratio:3 / 4;border-radius:16px;box-shadow:4px 4px 0 var(--hard)}
-  .gal:not(.is-open) .tile--preview img{height:100%;object-fit:cover;object-position:50% 20%}
-  .gal:not(.is-open) .tile figcaption{display:none}
-  .gal-more{display:inline-flex}
+  .gal .tile{flex:0 0 calc(100% - 8px);aspect-ratio:4 / 5 !important;scroll-snap-align:start;scroll-snap-stop:always;box-shadow:5px 5px 0 var(--hard)}
+  .gal .tile:hover{transform:none;box-shadow:5px 5px 0 var(--hard)}
+  .gal .tile img{height:100%;object-fit:cover;object-position:50% 25%}
+  .gal .tile:hover img{transform:none}
+  .tile figcaption span{opacity:1;transform:none;font-size:13px}
+  .gal-dots{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .gal-dots button{width:11px;height:11px;padding:0;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;transition:background-color .2s,transform .2s}
+  .gal-dots button[aria-current="true"]{background:var(--accent);transform:scale(1.2)}
 }
-@media (max-width:520px){.gal.is-open{grid-template-columns:1fr}}
 .lightbox{position:fixed;inset:0;z-index:200;background:rgba(37,37,45,.92);display:none;align-items:center;justify-content:center;padding:32px}
 .lightbox.is-open{display:flex}
 .lightbox img{max-height:86vh;max-width:min(1100px,100%);border-radius:18px;border:2px solid #000;box-shadow:8px 8px 0 #000}
@@ -467,3 +469,28 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
 .kform__felder{margin:0;padding:0;border:0;min-width:0}
 .kform__felder:disabled{opacity:.7}
 #kform-sendestatus:empty{display:none}
+
+/* Popups: Zurück-Button bleibt beim Scrollen oben angepinnt */
+.pop__bar{position:sticky;top:16px;z-index:5;display:flex;justify-content:flex-end;height:0;overflow:visible}
+.pop__bar .btn{--sh:3px;transform:translateY(-8px)}
+.pop__bar .btn:hover{--sh:0px}
+.pop__head{padding-right:140px}
+@media (max-width:640px){
+  .pop__bar .btn{transform:translateY(-6px)}
+  .pop__head{padding-right:118px}
+}
+
+/* Sonne im Hero: antippen wechselt zwischen Tag und Nacht */
+.hero__sonne{cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:transparent}
+.hero__sonne:focus-visible{outline:3px solid var(--accent);outline-offset:8px}
+@media (hover:hover){.hero__sonne:hover{filter:drop-shadow(0 0 18px rgba(255,51,102,.35))}.theme-nacht .hero__sonne:hover{filter:drop-shadow(0 0 18px rgba(160,177,228,.45))}}
+@media (max-width:900px){
+  .hero__orbit{order:-1;width:min(100%,380px);flex:0 0 auto;margin:0 auto -8px}
+  .hero__body{padding-top:28px;gap:24px}
+}
+
+/* Hero-Buttons auf dem Handy untereinander und gleich breit */
+@media (max-width:640px){
+  .hero__ctas{flex-direction:column;align-items:stretch}
+  .hero__ctas .btn{width:100%}
+}
