@@ -566,3 +566,9 @@ html.vt-wechsel .site *::after{transition:none !important}
 ::view-transition-old(lj-logo),::view-transition-old(lj-sonne){display:none}
 ::view-transition-new(lj-logo),::view-transition-new(lj-sonne){animation:none}
 ::view-transition-group(lj-logo),::view-transition-group(lj-sonne){animation-duration:0s;z-index:3}
+
+/* Münzwurf: Sonne und Mond drehen bei jedem Wechsel anderthalb Umdrehungen weiter
+   (Sonne, Mond, Sonne, Mond) und laufen sanft aus, statt nur umzuklappen. */
+:root{--muenz-dauer:1.5s;--muenz-kurve:cubic-bezier(.2,.75,.25,1)}
+.coin__in,.topbar .coin__in,#sonne > .keep-tr{transition:transform var(--muenz-dauer) var(--muenz-kurve) !important}
+@media (prefers-reduced-motion:reduce){.coin__in,.topbar .coin__in,#sonne > .keep-tr{transition:none !important}}

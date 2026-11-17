@@ -37,6 +37,22 @@
     var r = elm.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
+  // Münzwurf: der Drehwinkel wächst bei jedem Wechsel um 540° (1,5 Umdrehungen).
+  // So zeigt die Münze unterwegs Sonne, Mond, Sonne, Mond und landet auf der richtigen Seite.
+  var muenzWinkel = site.classList.contains('theme-nacht') ? 180 : 0;
+  var setNightOhneMuenze = setNight;
+  setNight = function (night, save) {
+    setNightOhneMuenze(night, save);
+    if (save) {
+      // mindestens anderthalb Umdrehungen weiter, Endstellung immer passend zum Modus:
+      // Tag = Vielfaches von 360°, Nacht = 180° darüber
+      var ziel = muenzWinkel + 540;
+      var zeigtMond = Math.round(ziel / 180) % 2 === 1;
+      if (zeigtMond !== night) ziel += 180;
+      muenzWinkel = ziel;
+      site.style.setProperty('--coin-rot', muenzWinkel + 'deg');
+    }
+  };
   function wechsleModus(ursprung) {
     var night = !site.classList.contains('theme-nacht');
     var o = ursprung || mitteVon(modeBtn);
@@ -44,7 +60,8 @@
     var html = document.documentElement;
     if (document.startViewTransition && !ruhig) {
       html.classList.add('vt-wechsel');
-      var vt = document.startViewTransition(function () { setNight(night, true); });
+      // Den Ziel-Modus erst beim tatsächlichen Umschalten bestimmen, damit schnelle Doppelklicks sauber zählen
+      var vt = document.startViewTransition(function () { setNight(!site.classList.contains('theme-nacht'), true); });
       vt.ready.then(function () {
         var r = Math.hypot(Math.max(o.x, window.innerWidth - o.x), Math.max(o.y, window.innerHeight - o.y));
         html.animate(
