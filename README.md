@@ -44,15 +44,35 @@ Link direkt zu Cal.com.
 „Paket anfragen“, „Bestandsaufnahme anfragen“, „Kickoff anfragen“ und „Nachricht schreiben“
 öffnen das Kontakt-Popup. „Worum geht es?“ ist dabei passend vorausgefüllt.
 
-Solange in `index.html` beim Formular `id="kform"` das Attribut `data-endpoint` leer ist,
-öffnet das Absenden das E-Mail-Programm mit der fertigen Nachricht an `data-mail`.
-Für den Versand direkt von der Website einen Formular-Dienst (z. B. Formspree) anlegen,
-dessen Adresse in `data-endpoint` eintragen und den Dienst in der Datenschutzerklärung nennen.
+„E-Mail vorbereiten“ erstellt lokal eine Vorschau mit Empfänger, Betreff und Nachricht.
+Es wird keine Nachricht direkt versendet. Der Besucher öffnet anschließend sein
+E-Mail-Programm oder kopiert den Text in sein Webmail-Postfach. Die Angaben bleiben
+beim Bearbeiten erhalten; es gibt keine verpflichtende Datenschutz-Einwilligung.
+
+Für Direktversand ist eine tatsächliche Server- oder Formulardienst-Anbindung nötig;
+ein `data-endpoint` allein aktiviert keinen Versand mehr. Dann auch die Rechtstexte
+anpassen. Keine Zugangsdaten im Frontend hinterlegen.
+
+## Tastatur und Cache
+
+Kontakt, Pakete und Galerie verwenden native modale `dialog`-Elemente. Escape schließt
+nur das oberste Fenster; der Fokus kehrt zum Auslöser zurück. Die FAQ-Tabs unterstützen
+Pfeiltasten, Home und End. Der Skip-Link fokussiert den vollständigen Hauptinhalt.
+
+Bei weiteren Änderungen an CSS oder JavaScript die Versionskennung an den entsprechenden
+Dateiverweisen in allen HTML-Seiten aktualisieren, damit alte Browser-Caches nicht
+unterschiedliche Versionen kombinieren.
 
 ## Offen
 
-- [ ] LinkedIn- und Instagram-Links im Footer eintragen (aktuell `#`)
-- [ ] Optional: Kontaktformular an einen Formular-Dienst anschließen (siehe oben)
+- [ ] Optional: Kontaktformular mit Direktversand einrichten.
+- [ ] Zusätzlichen schnellen, direkten Kontaktweg neben E-Mail klären. Es wird auf Wunsch keine Telefonnummer veröffentlicht; das lokale E-Mail-Formular schafft keinen eigenständigen zweiten Kontaktweg.
+- [ ] Vertragsgrundlagen für den geschäftlich genutzten kostenlosen Google Kalender/Meet prüfen. Eine Datenschutzerklärung ersetzt keine erforderliche Auftragsverarbeitungsvereinbarung.
+
+LinkedIn und Instagram sind mit den bestätigten Studio-Profilen verlinkt. Laut Auskunft
+der Gesellschafterinnen vom 17. November 2026 gibt es noch keine Umsatzsteuer-ID,
+Wirtschafts-ID oder Eintragung im Gesellschaftsregister. Bei Erteilung nachtragen;
+keine persönliche Steuer-ID oder gewöhnliche Steuernummer veröffentlichen.
 
 ## Lokal ansehen
 
