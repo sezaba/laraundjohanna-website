@@ -514,3 +514,15 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
   .topbar .wordmark .coin{--s:26px!important}
   .menu-btn{padding-left:14px;padding-right:14px}
 }
+
+/* Mobil: Galerie breiter (bis fast an den Rand), weniger Luft bis zu den Angeboten */
+@media (max-width:900px){
+  .gal-wrap{margin:0 -16px;grid-template-columns:26px minmax(0,1fr) 26px;column-gap:4px}
+  .gal{padding-right:6px;margin-right:-6px}
+  .gal .tile,.gal .tile:hover{flex-basis:calc(100% - 6px)}
+  .gal .tile img{box-shadow:4px 4px 0 var(--hard)}
+  .gal-pfeil{width:26px;height:26px}
+  .gal-pfeil svg{width:13px;height:13px}
+  .galerie{padding-bottom:48px}
+  .angebote{padding-top:56px}
+}
