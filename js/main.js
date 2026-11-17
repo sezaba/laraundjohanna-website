@@ -330,7 +330,15 @@
     b.type = 'button';
     b.setAttribute('role', 'tab');
     b.id = 'tab-' + t.key;
-    b.addEventListener('click', function () { selectTab(i); });
+    b.addEventListener('click', function () {
+      selectTab(i);
+      // Mobil: nach dem Antippen eines Themas direkt zu den passenden Fragen scrollen
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var ziel = qaEl.getBoundingClientRect().top + window.pageYOffset - 16;
+        window.scrollTo({ top: ziel, behavior: ruhig ? 'auto' : 'smooth' });
+      }
+    });
     tabsEl.appendChild(b);
     return b;
   });

@@ -526,3 +526,17 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
   .galerie{padding-bottom:48px}
   .angebote{padding-top:56px}
 }
+
+/* Mobil: Erstgesprächs-Kachel mit pinkem Button, weniger Luft bis zum Teamfoto */
+@media (max-width:700px){
+  .kachel--gespraech .kachel__more{
+    position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin-top:4px;
+    padding:12px 22px;border:2px solid var(--hard);border-radius:999px;background:#FF3366;color:#25252D;
+    font:500 16px/1 var(--f-sans);box-shadow:3px 3px 0 var(--hard);transition:box-shadow .18s ease}
+  .kachel--gespraech .kachel__more:hover,.kachel--gespraech .kachel__more:active,
+  .kachel--gespraech:hover .kachel__more{box-shadow:0 0 0 var(--hard);border-color:var(--hard);color:#25252D}
+  .theme-nacht .kachel--gespraech .kachel__more,.theme-nacht .kachel--gespraech:hover .kachel__more{background:#25252D;color:#FFFFFF;border-color:#000}
+  .kachel--gespraech:hover .kachel__more svg{transform:none}
+  .angebote{padding-bottom:56px}
+  .ueber{padding-top:56px}
+}
