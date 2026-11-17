@@ -14,7 +14,7 @@
 <link rel="canonical" href="https://laraundjohanna.de/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=20261117-contact">
+<link rel="stylesheet" href="css/style.css?v=20261117-direct">
 <link rel="stylesheet" href="css/booking.css">
 </head>
 <body>
@@ -140,36 +140,39 @@
 </div>
 </dialog>
 
-<!-- Kontakt: Nachricht lokal vorbereiten und im eigenen E-Mail-Programm senden. -->
+<!-- Kontakt: Direktversand über Form.taxi an das Studio-Postfach. -->
 <dialog class="pop pop--kontakt" id="kpop" aria-labelledby="kpop-title">
 <div class="pop__box kform__box" tabindex="-1">
 <div class="pop__head"><div><p class="eyebrow">Lasst uns kennenlernen</p><h3 class="pop__title" id="kpop-title">Schreibt uns.</h3><p class="pop__tag">Wir melden uns innerhalb von zwei Werktagen.</p></div>
 <button class="btn btn--klein btn--weiss" type="button" data-close>Schließen ✕</button></div>
-<form class="kform" id="kform" novalidate data-mail="hallo@laraundjohanna.de">
-<p class="kform__hinweis">Hier bereitet ihr eine E-Mail an uns vor. Ihr sendet sie anschließend selbst in eurem E-Mail-Programm. Alternativ schreibt direkt an <a href="mailto:hallo@laraundjohanna.de">hallo@laraundjohanna.de</a>.</p>
+<form class="kform" id="kform" action="https://form.taxi/s/46vfhlsv" method="post" novalidate>
+<p class="kform__hinweis">Schickt uns eure Anfrage direkt über dieses Formular. Wir antworten an eure angegebene E-Mail-Adresse.</p>
+<input type="hidden" name="_subject" value="Neue Website-Anfrage · Lara &amp; Johanna">
+<input type="hidden" name="_lang" value="de">
+<fieldset class="kform__felder" id="kform-felder">
 <div class="kform__grid">
-<label class="kfeld"><span>Name *</span><input type="text" name="name" autocomplete="name" required></label>
-<label class="kfeld"><span>E-Mail *</span><input type="email" name="email" autocomplete="email" required></label>
-<label class="kfeld"><span>Unternehmen</span><input type="text" name="unternehmen" autocomplete="organization"></label>
+<label class="kfeld"><span>Name *</span><input type="text" name="name" autocomplete="name" maxlength="120" required></label>
+<label class="kfeld"><span>E-Mail *</span><input type="email" name="email" autocomplete="email" maxlength="254" required></label>
+<label class="kfeld"><span>Unternehmen</span><input type="text" name="unternehmen" autocomplete="organization" maxlength="200"></label>
 <label class="kfeld"><span>Worum geht es?</span><select name="anliegen" id="kform-anliegen"></select></label>
-<label class="kfeld kfeld--voll"><span>Eure Nachricht *</span><textarea name="nachricht" rows="5" required placeholder="Erzählt uns kurz von eurem Vorhaben …"></textarea></label>
+<label class="kfeld kfeld--voll"><span>Eure Nachricht *</span><textarea name="nachricht" rows="5" maxlength="6000" required placeholder="Erzählt uns kurz von eurem Vorhaben …"></textarea></label>
 <div class="kfeld kfeld--voll kform__wahl" role="group" aria-label="Wie sollen wir sprechen?"><span>Erstgespräch am liebsten</span>
 <label class="kchip"><input type="radio" name="termin" value="Per Video" checked><b>Per Video</b></label>
 <label class="kchip"><input type="radio" name="termin" value="Vor Ort in Hamburg"><b>Vor Ort in Hamburg</b></label>
 <label class="kchip"><input type="radio" name="termin" value="Erstmal per E-Mail"><b>Erstmal per E-Mail</b></label>
 </div>
-<p class="kform__hinweis kfeld--voll">Wir verwenden eure Angaben zur Bearbeitung eurer Anfrage. Mehr dazu in der <a href="datenschutz.html#kontakt" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
+<input type="text" name="_gotcha" class="kform__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p class="kform__hinweis kfeld--voll">Für die Übermittlung eurer Anfrage nutzen wir Form.taxi. Mehr dazu in der <a href="datenschutz.html#kontakt" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
 </div>
-<p class="kform__fehler" id="kform-fehler" role="alert" hidden></p>
-<div class="pop__foot"><p class="pop__note">* Pflichtfelder · Das Erstgespräch ist kostenlos und unverbindlich.</p><button class="btn btn--pink" type="submit">E-Mail vorbereiten<span class="arr" aria-hidden="true">→</span></button></div>
+</fieldset>
+<p class="kform__fehler" id="kform-fehler" role="alert" tabindex="-1" hidden></p>
+<p class="kform__hinweis" id="kform-sendestatus" role="status"></p>
+<div class="pop__foot"><p class="pop__note">* Pflichtfelder · Das Erstgespräch ist kostenlos und unverbindlich.</p><button class="btn btn--pink" type="submit">Nachricht senden<span class="arr" aria-hidden="true">→</span></button></div>
 </form>
 <div class="kform__danke" id="kform-danke" hidden>
-<h3 class="pop__title" id="kform-vorschau-titel" tabindex="-1">Eure E-Mail ist vorbereitet.</h3>
-<p class="kform__hinweis">Es wurde noch nichts gesendet. Öffnet euer E-Mail-Programm und sendet die Nachricht dort ab. Falls kein Programm eingerichtet ist, kopiert den Text in euer Webmail-Postfach.</p>
-<label class="kfeld kform__vorschau"><span>Vorschau zum Kopieren</span><textarea id="kform-vorschau" rows="9" readonly></textarea></label>
-<div class="kform__aktionen"><a class="btn btn--pink" id="kform-mail">E-Mail-Programm öffnen</a><button class="btn btn--klein" type="button" id="kform-kopieren">Nachricht kopieren</button></div>
-<p class="kform__hinweis" id="kform-status" role="status"></p>
-<button class="btn btn--klein" type="button" id="kform-bearbeiten">Angaben bearbeiten</button>
+<h3 class="pop__title" id="kform-erfolg-titel" tabindex="-1">Danke für eure Nachricht!</h3>
+<p class="kform__hinweis">Eure Anfrage wurde übermittelt. Wir melden uns innerhalb von zwei Werktagen bei euch.</p>
+<button class="btn btn--klein" type="button" data-close>Schließen</button>
 </div>
 </div>
 </dialog>
@@ -182,7 +185,7 @@
 
 </div>
 <script src="js/data.js"></script>
-<script src="js/main.js?v=20261117-contact"></script>
+<script src="js/main.js?v=20261117-direct"></script>
 <script src="js/booking.js" defer></script>
 </body>
 </html>

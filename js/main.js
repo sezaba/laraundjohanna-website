@@ -264,6 +264,7 @@
   var kFehler = $('kform-fehler');
   var kDanke = $('kform-danke');
   var kOpener = null;
+  var kSending = false;
   var STANDARD = ['Kostenloses Erstgespräch'].concat(D.offers.map(function (o) { return o.name; }), ['Individuelles Angebot', 'Etwas anderes']);
   function fillSelect(extra) {
     kSelect.innerHTML = '';
@@ -273,16 +274,17 @@
   }
   function openKontakt(anliegen, opener) {
     kOpener = opener || null;
+    if (!kDanke.hidden) kform.reset();
     kform.hidden = false;
     kDanke.hidden = true;
     kform.classList.remove('is-checked');
     kFehler.hidden = true;
-    fillSelect(anliegen);
+    if (!kSending) fillSelect(anliegen);
     kpop.showModal();
     syncScrollLock();
     kbox.scrollTop = 0;
     var first = kform.querySelector('input[name=name]');
-    if (window.matchMedia('(pointer: fine)').matches) first.focus({ preventScroll: true }); else kbox.focus({ preventScroll: true });
+    if (!kSending && window.matchMedia('(pointer: fine)').matches) first.focus({ preventScroll: true }); else kbox.focus({ preventScroll: true });
   }
   function closeKontakt() {
     if (!kpop.open) return;
@@ -299,46 +301,61 @@
     openKontakt(a.getAttribute('data-kontakt'), a);
   });
 
-  var preview = $('kform-vorschau');
-  var copyStatus = $('kform-status');
-  $('kform-bearbeiten').addEventListener('click', function () {
-    kDanke.hidden = true;
-    kform.hidden = false;
-    kform.querySelector('input[name=name]').focus();
-  });
-  $('kform-kopieren').addEventListener('click', async function () {
-    try {
-      await navigator.clipboard.writeText(preview.value);
-      copyStatus.textContent = 'Kopiert. Fügt die Nachricht in eurem E-Mail-Postfach ein und sendet sie an hallo@laraundjohanna.de.';
-    } catch (error) {
-      preview.focus();
-      preview.select();
-      copyStatus.textContent = 'Bitte kopiert den markierten Text mit Strg+C oder ⌘C und fügt ihn in eurem E-Mail-Postfach ein.';
-    }
-  });
-  kform.addEventListener('submit', function (e) {
+  var kFields = $('kform-felder');
+  var kStatus = $('kform-sendestatus');
+  var kSubmit = kform.querySelector('[type=submit]');
+  var kSubmitLabel = kSubmit.innerHTML;
+  kform.addEventListener('submit', async function (e) {
     e.preventDefault();
+    if (kSending) return;
+    ['name', 'email', 'nachricht'].forEach(function (name) {
+      var input = kform.elements.namedItem(name);
+      input.value = input.value.trim();
+    });
     kform.classList.add('is-checked');
     if (!kform.checkValidity()) {
       kFehler.textContent = 'Bitte füllt alle Pflichtfelder aus und gebt eine gültige E-Mail-Adresse an.';
       kFehler.hidden = false;
-      var bad = kform.querySelector(':invalid');
+      var bad = kform.querySelector('input:invalid, textarea:invalid, select:invalid');
       if (bad) bad.focus();
       return;
     }
     kFehler.hidden = true;
-    var f = new FormData(kform);
-    var text = 'Name: ' + f.get('name') + '\nE-Mail: ' + f.get('email') +
-      (f.get('unternehmen') ? '\nUnternehmen: ' + f.get('unternehmen') : '') +
-      '\nAnliegen: ' + f.get('anliegen') + '\nGespräch: ' + f.get('termin') + '\n\n' + f.get('nachricht');
-    var subject = 'Anfrage: ' + f.get('anliegen');
-    var mail = kform.getAttribute('data-mail');
-    $('kform-mail').href = 'mailto:' + mail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
-    preview.value = 'An: ' + mail + '\nBetreff: ' + subject + '\n\n' + text;
-    copyStatus.textContent = '';
-    kform.hidden = true;
-    kDanke.hidden = false;
-    $('kform-vorschau-titel').focus();
+    kStatus.textContent = 'Eure Nachricht wird gesendet …';
+    var payload = new FormData(kform);
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, 25000);
+    kSending = true;
+    kFields.disabled = true;
+    kSubmit.disabled = true;
+    kSubmit.textContent = 'Wird gesendet …';
+    kform.setAttribute('aria-busy', 'true');
+    try {
+      var response = await fetch(kform.action, {
+        method: 'POST',
+        body: payload,
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+        credentials: 'omit'
+      });
+      var result = await response.json();
+      if (!response.ok || result.success !== true) throw new Error('not-confirmed');
+      kform.hidden = true;
+      kDanke.hidden = false;
+      if (kpop.open) $('kform-erfolg-titel').focus();
+    } catch (error) {
+      kFehler.textContent = 'Wir konnten keine Sendebestätigung empfangen. Eure Eingaben bleiben erhalten. Bitte wartet kurz, bevor ihr es erneut versucht, oder schreibt direkt an hallo@laraundjohanna.de.';
+      kFehler.hidden = false;
+      if (kpop.open) kFehler.focus();
+    } finally {
+      clearTimeout(timer);
+      kSending = false;
+      kFields.disabled = false;
+      kSubmit.disabled = false;
+      kSubmit.innerHTML = kSubmitLabel;
+      kform.removeAttribute('aria-busy');
+      kStatus.textContent = '';
+    }
   });
 
   /* Native modale Dialoge halten den Fokus im obersten Fenster. */

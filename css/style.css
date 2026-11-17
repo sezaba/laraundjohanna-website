@@ -463,3 +463,7 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
 .kfeld > span{color:var(--muted)}
 .kfeld input::placeholder,.kfeld textarea::placeholder{opacity:1}
 .kfeld input:focus-visible,.kfeld select:focus-visible,.kfeld textarea:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+
+.kform__felder{margin:0;padding:0;border:0;min-width:0}
+.kform__felder:disabled{opacity:.7}
+#kform-sendestatus:empty{display:none}

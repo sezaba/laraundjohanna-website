@@ -44,14 +44,23 @@ Link direkt zu Cal.com.
 „Paket anfragen“, „Bestandsaufnahme anfragen“, „Kickoff anfragen“ und „Nachricht schreiben“
 öffnen das Kontakt-Popup. „Worum geht es?“ ist dabei passend vorausgefüllt.
 
-„E-Mail vorbereiten“ erstellt lokal eine Vorschau mit Empfänger, Betreff und Nachricht.
-Es wird keine Nachricht direkt versendet. Der Besucher öffnet anschließend sein
-E-Mail-Programm oder kopiert den Text in sein Webmail-Postfach. Die Angaben bleiben
-beim Bearbeiten erhalten; es gibt keine verpflichtende Datenschutz-Einwilligung.
+„Nachricht senden“ überträgt die Eingaben per HTTPS direkt an Form.taxi
+(`https://form.taxi/s/46vfhlsv`). Der Empfänger ist im Form.taxi-Konto fest auf
+`hallo@laraundjohanna.de` eingestellt. Keine SMTP-Zugangsdaten oder Verwaltungs-API-Keys
+sind im Website-Code erforderlich. Die Sendeadresse ist für die öffentliche Einbindung gedacht.
 
-Für Direktversand ist eine tatsächliche Server- oder Formulardienst-Anbindung nötig;
-ein `data-endpoint` allein aktiviert keinen Versand mehr. Dann auch die Rechtstexte
-anpassen. Keine Zugangsdaten im Frontend hinterlegen.
+Der kostenlose Free-Tarif umfasst aktuell 40 Sendungen pro Monat. Weitere Sendungen
+werden laut Anbieter gespeichert, ihre Inhalte sind erst nach einem Upgrade einsehbar.
+Keine automatische kostenpflichtige Umstellung einrichten. Auslastung regelmäßig im
+Form.taxi-Panel prüfen. Domainfreigabe und Spamfilter sind aktiviert; das Formular
+verwendet zusätzlich das Honeypot-Feld `_gotcha`. Spamordner im Panel beachten.
+
+Erst HTTP-Erfolg plus `success: true` lösen die Bestätigung aus. Während des Sendens
+werden erneute Klicks verhindert. Bei Fehler oder nach 25 Sekunden ohne Bestätigung
+bleiben die Eingaben erhalten; es gibt keine automatische Wiederholung. Ein Timeout
+kann auch auftreten, wenn die Anfrage bereits angenommen wurde, daher vor einem
+neuen Versuch kurz warten. Auf Erfolg wird kein automatischer E-Mail-Eingang beim
+Besucher versprochen. Direktantworten auf die Benachrichtigung gehen an das `email`-Feld.
 
 ## Tastatur und Cache
 
@@ -65,8 +74,6 @@ unterschiedliche Versionen kombinieren.
 
 ## Offen
 
-- [ ] Optional: Kontaktformular mit Direktversand einrichten.
-- [ ] Zusätzlichen schnellen, direkten Kontaktweg neben E-Mail klären. Es wird auf Wunsch keine Telefonnummer veröffentlicht; das lokale E-Mail-Formular schafft keinen eigenständigen zweiten Kontaktweg.
 - [ ] Vertragsgrundlagen für den geschäftlich genutzten kostenlosen Google Kalender/Meet prüfen. Eine Datenschutzerklärung ersetzt keine erforderliche Auftragsverarbeitungsvereinbarung.
 
 LinkedIn und Instagram sind mit den bestätigten Studio-Profilen verlinkt. Laut Auskunft
