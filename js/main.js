@@ -64,24 +64,27 @@
 
   /* ---------- Galerie: mobil aufklappen + Lightbox ---------- */
   var gal = $('gal');
-  // Mobil: Punkte unter dem Karussell zeigen, welches Bild gerade sichtbar ist
+  // Mobil: kleine Pfeile links und rechts blättern ein Bild weiter
   var galTiles = Array.prototype.slice.call(gal.querySelectorAll('.tile'));
-  var dotsEl = $('gal-dots');
-  var dots = galTiles.map(function (tile, i) {
-    var d = el('button');
-    d.type = 'button';
-    d.setAttribute('aria-label', 'Bild ' + (i + 1) + ' von ' + galTiles.length);
-    d.addEventListener('click', function () { gal.scrollTo({ left: tile.offsetLeft - gal.offsetLeft, behavior: 'smooth' }); });
-    dotsEl.appendChild(d);
-    return d;
-  });
-  function updateDots() {
-    var step = galTiles.length > 1 ? galTiles[1].offsetLeft - galTiles[0].offsetLeft : 1;
-    var cur = Math.round(gal.scrollLeft / (step || 1));
-    dots.forEach(function (d, i) { d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
+  var pfeilZurueck = $('gal-zurueck');
+  var pfeilWeiter = $('gal-weiter');
+  function galSchritt() {
+    return galTiles.length > 1 ? galTiles[1].offsetLeft - galTiles[0].offsetLeft : gal.clientWidth;
   }
-  gal.addEventListener('scroll', function () { window.requestAnimationFrame(updateDots); }, { passive: true });
-  updateDots();
+  function galIndex() { return Math.round(gal.scrollLeft / (galSchritt() || 1)); }
+  function galGehe(i) {
+    i = Math.max(0, Math.min(galTiles.length - 1, i));
+    gal.scrollTo({ left: i * galSchritt(), behavior: 'smooth' });
+  }
+  function pfeileAktualisieren() {
+    var i = galIndex();
+    pfeilZurueck.disabled = i <= 0;
+    pfeilWeiter.disabled = i >= galTiles.length - 1;
+  }
+  pfeilZurueck.addEventListener('click', function () { galGehe(galIndex() - 1); });
+  pfeilWeiter.addEventListener('click', function () { galGehe(galIndex() + 1); });
+  gal.addEventListener('scroll', function () { window.requestAnimationFrame(pfeileAktualisieren); }, { passive: true });
+  pfeileAktualisieren();
 
   var lb = $('lightbox');
   var lbImg = $('lightbox-img');
