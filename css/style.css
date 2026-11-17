@@ -543,3 +543,26 @@ dialog.pop::backdrop,dialog.lightbox::backdrop{background:transparent}
 
 /* Jede Sonne/jeder Mond ist antippbar und wechselt Tag und Nacht */
 .coin{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ---------- Tag/Nacht-Wechsel: alles im gleichen Takt ----------
+   Alle Sonnen/Monde drehen gleich lang und mit derselben Kurve, die Umlaufbahnen etwas länger.
+   Die Farben wechseln als Kreis, der sich von der angetippten Sonne aus öffnet (js/main.js). */
+:root{--wechsel-dauer:1s;--wechsel-kurve:cubic-bezier(.65,0,.35,1)}
+.coin__in,.topbar .coin__in,#sonne > .keep-tr{transition:transform var(--wechsel-dauer) var(--wechsel-kurve) !important}
+.hero__orbit svg > g.keep-tr{transition:transform calc(var(--wechsel-dauer) * 1.4) var(--wechsel-kurve) !important}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:2}
+/* Während des Kreises keine zusätzlichen Farbübergänge, nur die Drehungen laufen */
+html.vt-wechsel body,
+html.vt-wechsel .site,
+html.vt-wechsel .site *:not(.coin__in):not(.keep-tr),
+html.vt-wechsel .site *::before,
+html.vt-wechsel .site *::after{transition:none !important}
+@media (prefers-reduced-motion:reduce){.coin__in,.topbar .coin__in,#sonne > .keep-tr,.hero__orbit svg > g.keep-tr{transition:none !important}}
+/* Logo-Münze und Hero-Sonne drehen während des Kreises live und gleichzeitig obendrauf */
+.topbar .wordmark .coin{view-transition-name:lj-logo}
+#sonne{view-transition-name:lj-sonne}
+::view-transition-old(lj-logo),::view-transition-old(lj-sonne){display:none}
+::view-transition-new(lj-logo),::view-transition-new(lj-sonne){animation:none}
+::view-transition-group(lj-logo),::view-transition-group(lj-sonne){animation-duration:0s;z-index:3}

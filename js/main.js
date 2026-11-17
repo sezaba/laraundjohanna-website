@@ -28,13 +28,48 @@
     if (meta) meta.setAttribute('content', night ? '#25252D' : '#FFFFFF');
   }
   setNight(site.classList.contains('theme-nacht'), false);
+  // Der neue Modus breitet sich als Kreis von der angetippten Sonne (oder dem Button) aus.
+  // Browser ohne View Transitions bekommen einen sanften Farbübergang.
+  var WECHSEL_MS = 1000;
   var switchTimer = null;
-  modeBtn.addEventListener('click', function () {
+  var wechselUrsprung = null;
+  function mitteVon(elm) {
+    var r = elm.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+  function wechsleModus(ursprung) {
+    var night = !site.classList.contains('theme-nacht');
+    var o = ursprung || mitteVon(modeBtn);
+    var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var html = document.documentElement;
+    if (document.startViewTransition && !ruhig) {
+      html.classList.add('vt-wechsel');
+      var vt = document.startViewTransition(function () { setNight(night, true); });
+      vt.ready.then(function () {
+        var r = Math.hypot(Math.max(o.x, window.innerWidth - o.x), Math.max(o.y, window.innerHeight - o.y));
+        html.animate(
+          { clipPath: ['circle(0px at ' + o.x + 'px ' + o.y + 'px)', 'circle(' + r + 'px at ' + o.x + 'px ' + o.y + 'px)'] },
+          { duration: WECHSEL_MS, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }
+        );
+      }).catch(function () {});
+      var aufraeumen = function () { html.classList.remove('vt-wechsel'); };
+      vt.finished.then(aufraeumen, aufraeumen);
+      return;
+    }
     site.classList.add('is-switching');
     clearTimeout(switchTimer);
-    switchTimer = setTimeout(function () { site.classList.remove('is-switching'); }, 800);
-    setNight(!site.classList.contains('theme-nacht'), true);
+    switchTimer = setTimeout(function () { site.classList.remove('is-switching'); }, 900);
+    setNight(night, true);
+  }
+  modeBtn.addEventListener('click', function () {
+    var o = wechselUrsprung;
+    wechselUrsprung = null;
+    wechsleModus(o);
   });
+  function wechselVon(elm) {
+    wechselUrsprung = mitteVon(elm);
+    modeBtn.click();
+  }
 
   // Jede Sonne/jeder Mond (Logo oben, Erstgespräch, Kontakt, Fußzeile) wechselt Tag und Nacht.
   // Abfangen in der Capture-Phase, damit der Klick nicht zusätzlich den Link oder die Kachel auslöst.
@@ -43,15 +78,15 @@
     if (!coin) return;
     e.preventDefault();
     e.stopPropagation();
-    modeBtn.click();
+    wechselVon(coin);
   }, true);
 
   // Sonne im Hero antippen = Tag/Nacht wechseln (wie der Button in der Navigation)
   var sonne = $('sonne');
   if (sonne) {
-    sonne.addEventListener('click', function () { modeBtn.click(); });
+    sonne.addEventListener('click', function () { wechselVon(sonne); });
     sonne.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); modeBtn.click(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wechselVon(sonne); }
     });
   }
 
