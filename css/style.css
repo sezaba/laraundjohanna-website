@@ -173,7 +173,7 @@ section,.footer{transition:background-color .7s ease}
     padding:0 8px 12px 0;margin-right:-8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .gal::-webkit-scrollbar{display:none}
   .gcol{display:contents}
-  .gal .tile{flex:0 0 calc(100% - 8px);aspect-ratio:4 / 5 !important;scroll-snap-align:start;scroll-snap-stop:always;box-shadow:5px 5px 0 var(--hard)}
+  .gal .tile{flex:0 0 calc(100% - 8px);aspect-ratio:4 / 5 !important;scroll-snap-align:start;cursor:grab;box-shadow:5px 5px 0 var(--hard)}
   .gal .tile:hover{transform:none;box-shadow:5px 5px 0 var(--hard)}
   .gal .tile img{height:100%;object-fit:cover;object-position:50% 25%}
   .gal .tile:hover img{transform:none}
@@ -222,13 +222,14 @@ section,.footer{transition:background-color .7s ease}
 .angebote__more p{margin:0;max-width:40rem;color:var(--muted);font-size:17px;line-height:1.6}
 @media (max-width:1080px){.kacheln{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:700px){.gespraech__coin{display:none}}
+/* Mobil: Angebote untereinander, eine Kachel pro Reihe, kompakt */
 @media (max-width:700px){
-  .kacheln{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .kachel{min-height:170px;padding:18px 16px;gap:8px;border-radius:18px;box-shadow:4px 4px 0 var(--hard)}
+  .kacheln{grid-template-columns:1fr;gap:14px}
+  .kachel{min-height:0;padding:18px 20px 16px;gap:4px;border-radius:18px;box-shadow:4px 4px 0 var(--hard)}
   .kachel:hover,.kachel:focus-visible{box-shadow:6px 6px 0 var(--hard)}
-  .kachel__name{font-size:clamp(20px,5.6vw,24px)}
-  .kachel__short{font-size:13px;line-height:1.4}
-  .kachel__more{font-size:14px;gap:6px;padding-bottom:4px}
+  .kachel__name{margin:0;font-size:26px;line-height:30px;height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kachel__short{font-size:14px;line-height:1.4;max-width:none}
+  .kachel__more{font-size:14px;gap:6px;margin-top:6px;padding:0;border-bottom:0}
   .kachel--gespraech{grid-column:1 / -1;padding:28px 22px}
 }
 

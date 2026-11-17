@@ -87,12 +87,28 @@
   var lbImg = $('lightbox-img');
   var lbCap = $('lightbox-cap');
   var lastFocus = null;
+  // Auf dem Handy ist die Galerie nur ein Karussell zum Wischen, ohne Detailansicht
+  var galMobil = window.matchMedia('(max-width: 900px)');
+  function galModus() {
+    Array.prototype.forEach.call(gal.querySelectorAll('.tile'), function (tile) {
+      var img = tile.querySelector('img');
+      if (galMobil.matches) {
+        tile.removeAttribute('tabindex');
+        tile.removeAttribute('role');
+        tile.removeAttribute('aria-label');
+      } else {
+        tile.setAttribute('tabindex', '0');
+        tile.setAttribute('role', 'button');
+        tile.setAttribute('aria-label', 'Bild vergrößern: ' + img.alt);
+      }
+    });
+  }
+  galModus();
+  if (galMobil.addEventListener) galMobil.addEventListener('change', galModus);
   Array.prototype.forEach.call(gal.querySelectorAll('.tile'), function (tile) {
-    tile.setAttribute('tabindex', '0');
-    tile.setAttribute('role', 'button');
     var img = tile.querySelector('img');
-    tile.setAttribute('aria-label', 'Bild vergrößern: ' + img.alt);
     function open() {
+      if (galMobil.matches) return;
       lastFocus = tile;
       lbImg.src = img.currentSrc || img.src;
       lbImg.alt = img.alt;
