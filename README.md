@@ -43,6 +43,8 @@ Link direkt zu Cal.com.
 
 „Paket anfragen“, „Bestandsaufnahme anfragen“, „Kickoff anfragen“ und „Nachricht schreiben“
 öffnen das Kontakt-Popup. „Worum geht es?“ ist dabei passend vorausgefüllt.
+Das Formular dient ausschließlich schriftlichen Anfragen; Terminbuchungen laufen
+über die separaten Cal.com-Schaltflächen.
 
 „Nachricht senden“ überträgt die Eingaben per HTTPS direkt an Form.taxi
 (`https://form.taxi/s/46vfhlsv`). Der Empfänger ist im Form.taxi-Konto fest auf

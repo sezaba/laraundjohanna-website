@@ -156,18 +156,13 @@
 <label class="kfeld"><span>Unternehmen</span><input type="text" name="unternehmen" autocomplete="organization" maxlength="200"></label>
 <label class="kfeld"><span>Worum geht es?</span><select name="anliegen" id="kform-anliegen"></select></label>
 <label class="kfeld kfeld--voll"><span>Eure Nachricht *</span><textarea name="nachricht" rows="5" maxlength="6000" required placeholder="Erzählt uns kurz von eurem Vorhaben …"></textarea></label>
-<div class="kfeld kfeld--voll kform__wahl" role="group" aria-label="Wie sollen wir sprechen?"><span>Erstgespräch am liebsten</span>
-<label class="kchip"><input type="radio" name="termin" value="Per Video" checked><b>Per Video</b></label>
-<label class="kchip"><input type="radio" name="termin" value="Vor Ort in Hamburg"><b>Vor Ort in Hamburg</b></label>
-<label class="kchip"><input type="radio" name="termin" value="Erstmal per E-Mail"><b>Erstmal per E-Mail</b></label>
-</div>
 <input type="text" name="_gotcha" class="kform__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 <p class="kform__hinweis kfeld--voll">Für die Übermittlung eurer Anfrage nutzen wir Form.taxi. Mehr dazu in der <a href="datenschutz.html#kontakt" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
 </div>
 </fieldset>
 <p class="kform__fehler" id="kform-fehler" role="alert" tabindex="-1" hidden></p>
 <p class="kform__hinweis" id="kform-sendestatus" role="status"></p>
-<div class="pop__foot"><p class="pop__note">* Pflichtfelder · Das Erstgespräch ist kostenlos und unverbindlich.</p><button class="btn btn--pink" type="submit">Nachricht senden<span class="arr" aria-hidden="true">→</span></button></div>
+<div class="pop__foot"><p class="pop__note">* Pflichtfelder</p><button class="btn btn--pink" type="submit">Nachricht senden<span class="arr" aria-hidden="true">→</span></button></div>
 </form>
 <div class="kform__danke" id="kform-danke" hidden>
 <h3 class="pop__title" id="kform-erfolg-titel" tabindex="-1">Danke für eure Nachricht!</h3>
@@ -185,7 +180,7 @@
 
 </div>
 <script src="js/data.js"></script>
-<script src="js/main.js?v=20261117-direct"></script>
+<script src="js/main.js?v=20261117-mail-only"></script>
 <script src="js/booking.js" defer></script>
 </body>
 </html>

@@ -265,7 +265,7 @@
   var kDanke = $('kform-danke');
   var kOpener = null;
   var kSending = false;
-  var STANDARD = ['Kostenloses Erstgespräch'].concat(D.offers.map(function (o) { return o.name; }), ['Individuelles Angebot', 'Etwas anderes']);
+  var STANDARD = ['Allgemeine Anfrage'].concat(D.offers.map(function (o) { return o.name; }), ['Individuelles Angebot', 'Etwas anderes']);
   function fillSelect(extra) {
     kSelect.innerHTML = '';
     var list = extra && STANDARD.indexOf(extra) < 0 ? [extra].concat(STANDARD) : STANDARD;
