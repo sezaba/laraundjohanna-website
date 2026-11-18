@@ -1,18 +1,128 @@
 {
-  "assets/img/beefit-widget.png": {
-    "width": 479,
-    "height": 479,
-    "originalBytes": 310257,
+  "assets/img/muse-app.jpg": {
+    "width": 455,
+    "height": 988,
+    "originalBytes": 91653,
     "variants": [
       {
         "width": 320,
-        "src": "assets/img/optimized/beefit-widget-320.webp",
-        "bytes": 10090
+        "src": "assets/img/optimized/muse-app-320.webp",
+        "bytes": 34488
       },
       {
-        "width": 479,
-        "src": "assets/img/optimized/beefit-widget-479.webp",
-        "bytes": 17678
+        "width": 455,
+        "src": "assets/img/optimized/muse-app-455.webp",
+        "bytes": 58650
+      }
+    ]
+  },
+  "assets/img/motif-briefmarken.webp": {
+    "width": 1482,
+    "height": 2000,
+    "originalBytes": 470176,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/motif-briefmarken-320.webp",
+        "bytes": 37146
+      },
+      {
+        "width": 640,
+        "src": "assets/img/optimized/motif-briefmarken-640.webp",
+        "bytes": 97302
+      },
+      {
+        "width": 960,
+        "src": "assets/img/optimized/motif-briefmarken-960.webp",
+        "bytes": 171316
+      },
+      {
+        "width": 1280,
+        "src": "assets/img/optimized/motif-briefmarken-1280.webp",
+        "bytes": 240248
+      },
+      {
+        "width": 1482,
+        "src": "assets/img/optimized/motif-briefmarken-1482.webp",
+        "bytes": 340418
+      }
+    ]
+  },
+  "assets/img/muse-kampagne.jpg": {
+    "width": 573,
+    "height": 716,
+    "originalBytes": 96079,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/muse-kampagne-320.webp",
+        "bytes": 23396
+      },
+      {
+        "width": 573,
+        "src": "assets/img/optimized/muse-kampagne-573.webp",
+        "bytes": 58886
+      }
+    ]
+  },
+  "assets/img/inkrush-kampagne.jpg": {
+    "width": 848,
+    "height": 1177,
+    "originalBytes": 91425,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/inkrush-kampagne-320.webp",
+        "bytes": 13620
+      },
+      {
+        "width": 640,
+        "src": "assets/img/optimized/inkrush-kampagne-640.webp",
+        "bytes": 33504
+      },
+      {
+        "width": 848,
+        "src": "assets/img/optimized/inkrush-kampagne-848.webp",
+        "bytes": 49424
+      }
+    ]
+  },
+  "assets/img/tarot-to-go-karte.webp": {
+    "width": 438,
+    "height": 785,
+    "originalBytes": 115270,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/tarot-to-go-karte-320.webp",
+        "bytes": 46830
+      },
+      {
+        "width": 438,
+        "src": "assets/img/optimized/tarot-to-go-karte-438.webp",
+        "bytes": 108514
+      }
+    ]
+  },
+  "assets/img/motif-app.webp": {
+    "width": 923,
+    "height": 2000,
+    "originalBytes": 83044,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/motif-app-320.webp",
+        "bytes": 17766
+      },
+      {
+        "width": 640,
+        "src": "assets/img/optimized/motif-app-640.webp",
+        "bytes": 40632
+      },
+      {
+        "width": 923,
+        "src": "assets/img/optimized/motif-app-923.webp",
+        "bytes": 66512
       }
     ]
   },
@@ -43,25 +153,20 @@
       }
     ]
   },
-  "assets/img/bildwelt-portraet.jpg": {
-    "width": 800,
-    "height": 1200,
-    "originalBytes": 167398,
+  "assets/img/beefit-widget.png": {
+    "width": 479,
+    "height": 479,
+    "originalBytes": 310257,
     "variants": [
       {
         "width": 320,
-        "src": "assets/img/optimized/bildwelt-portraet-320.webp",
-        "bytes": 21418
+        "src": "assets/img/optimized/beefit-widget-320.webp",
+        "bytes": 10090
       },
       {
-        "width": 640,
-        "src": "assets/img/optimized/bildwelt-portraet-640.webp",
-        "bytes": 79206
-      },
-      {
-        "width": 800,
-        "src": "assets/img/optimized/bildwelt-portraet-800.webp",
-        "bytes": 115936
+        "width": 479,
+        "src": "assets/img/optimized/beefit-widget-479.webp",
+        "bytes": 17678
       }
     ]
   },
@@ -87,25 +192,59 @@
       }
     ]
   },
-  "assets/img/inkrush-kampagne.jpg": {
-    "width": 848,
-    "height": 1177,
-    "originalBytes": 91425,
+  "assets/img/tarot-to-go.jpg": {
+    "width": 540,
+    "height": 675,
+    "originalBytes": 85164,
     "variants": [
       {
         "width": 320,
-        "src": "assets/img/optimized/inkrush-kampagne-320.webp",
-        "bytes": 13620
+        "src": "assets/img/optimized/tarot-to-go-320.webp",
+        "bytes": 20306
+      },
+      {
+        "width": 540,
+        "src": "assets/img/optimized/tarot-to-go-540.webp",
+        "bytes": 48320
+      }
+    ]
+  },
+  "assets/img/bildwelt-portraet.jpg": {
+    "width": 800,
+    "height": 1200,
+    "originalBytes": 167398,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/bildwelt-portraet-320.webp",
+        "bytes": 21418
       },
       {
         "width": 640,
-        "src": "assets/img/optimized/inkrush-kampagne-640.webp",
-        "bytes": 33504
+        "src": "assets/img/optimized/bildwelt-portraet-640.webp",
+        "bytes": 79206
       },
       {
-        "width": 848,
-        "src": "assets/img/optimized/inkrush-kampagne-848.webp",
-        "bytes": 49424
+        "width": 800,
+        "src": "assets/img/optimized/bildwelt-portraet-800.webp",
+        "bytes": 115936
+      }
+    ]
+  },
+  "assets/img/manifestation-sticker.jpg": {
+    "width": 372,
+    "height": 464,
+    "originalBytes": 43041,
+    "variants": [
+      {
+        "width": 320,
+        "src": "assets/img/optimized/manifestation-sticker-320.webp",
+        "bytes": 16230
+      },
+      {
+        "width": 372,
+        "src": "assets/img/optimized/manifestation-sticker-372.webp",
+        "bytes": 27172
       }
     ]
   },
@@ -163,149 +302,25 @@
       }
     ]
   },
-  "assets/img/manifestation-sticker.jpg": {
-    "width": 372,
-    "height": 464,
-    "originalBytes": 43041,
+  "assets/img/bildwelt-boot.webp": {
+    "width": 902,
+    "height": 816,
+    "originalBytes": 75572,
     "variants": [
       {
         "width": 320,
-        "src": "assets/img/optimized/manifestation-sticker-320.webp",
-        "bytes": 16230
-      },
-      {
-        "width": 372,
-        "src": "assets/img/optimized/manifestation-sticker-372.webp",
-        "bytes": 27172
-      }
-    ]
-  },
-  "assets/img/motif-app.webp": {
-    "width": 923,
-    "height": 2000,
-    "originalBytes": 83044,
-    "variants": [
-      {
-        "width": 320,
-        "src": "assets/img/optimized/motif-app-320.webp",
-        "bytes": 17766
+        "src": "assets/img/optimized/bildwelt-boot-320.webp",
+        "bytes": 15572
       },
       {
         "width": 640,
-        "src": "assets/img/optimized/motif-app-640.webp",
-        "bytes": 40632
+        "src": "assets/img/optimized/bildwelt-boot-640.webp",
+        "bytes": 35364
       },
       {
-        "width": 923,
-        "src": "assets/img/optimized/motif-app-923.webp",
-        "bytes": 66512
-      }
-    ]
-  },
-  "assets/img/motif-briefmarken.webp": {
-    "width": 1482,
-    "height": 2000,
-    "originalBytes": 470176,
-    "variants": [
-      {
-        "width": 320,
-        "src": "assets/img/optimized/motif-briefmarken-320.webp",
-        "bytes": 37146
-      },
-      {
-        "width": 640,
-        "src": "assets/img/optimized/motif-briefmarken-640.webp",
-        "bytes": 97302
-      },
-      {
-        "width": 960,
-        "src": "assets/img/optimized/motif-briefmarken-960.webp",
-        "bytes": 171316
-      },
-      {
-        "width": 1280,
-        "src": "assets/img/optimized/motif-briefmarken-1280.webp",
-        "bytes": 240248
-      },
-      {
-        "width": 1482,
-        "src": "assets/img/optimized/motif-briefmarken-1482.webp",
-        "bytes": 340418
-      }
-    ]
-  },
-  "assets/img/muse-app.jpg": {
-    "width": 455,
-    "height": 988,
-    "originalBytes": 91653,
-    "variants": [
-      {
-        "width": 320,
-        "src": "assets/img/optimized/muse-app-320.webp",
-        "bytes": 34488
-      },
-      {
-        "width": 455,
-        "src": "assets/img/optimized/muse-app-455.webp",
-        "bytes": 58650
-      }
-    ]
-  },
-  "assets/img/muse-kampagne.jpg": {
-    "width": 573,
-    "height": 716,
-    "originalBytes": 96079,
-    "variants": [
-      {
-        "width": 320,
-        "src": "assets/img/optimized/muse-kampagne-320.webp",
-        "bytes": 23396
-      },
-      {
-        "width": 573,
-        "src": "assets/img/optimized/muse-kampagne-573.webp",
-        "bytes": 58886
-      }
-    ]
-  },
-  "assets/img/sternschanze-lettering.png": {
-    "width": 190,
-    "height": 255,
-    "originalBytes": 91632,
-    "variants": [
-      {
-        "width": 190,
-        "src": "assets/img/optimized/sternschanze-lettering-190.webp",
-        "bytes": 12406
-      }
-    ]
-  },
-  "assets/img/tarot-to-go-karte.png": {
-    "width": 158,
-    "height": 284,
-    "originalBytes": 111027,
-    "variants": [
-      {
-        "width": 158,
-        "src": "assets/img/optimized/tarot-to-go-karte-158.webp",
-        "bytes": 17352
-      }
-    ]
-  },
-  "assets/img/tarot-to-go.jpg": {
-    "width": 540,
-    "height": 675,
-    "originalBytes": 85164,
-    "variants": [
-      {
-        "width": 320,
-        "src": "assets/img/optimized/tarot-to-go-320.webp",
-        "bytes": 20306
-      },
-      {
-        "width": 540,
-        "src": "assets/img/optimized/tarot-to-go-540.webp",
-        "bytes": 48320
+        "width": 902,
+        "src": "assets/img/optimized/bildwelt-boot-902.webp",
+        "bytes": 56514
       }
     ]
   }

@@ -49,6 +49,8 @@
       if (zeigtMond !== night) ziel += 180;
       muenzWinkel = ziel;
       site.style.setProperty('--coin-rot', muenzWinkel + 'deg');
+      // Modus merken, damit Unterseiten, 404 und Ladeanimation ihn beim nächsten Aufruf übernehmen
+      try { localStorage.setItem('lj-modus', night ? 'nacht' : 'tag'); } catch (e) {}
     }
   };
   function wechsleModus(ursprung) {
@@ -90,7 +92,7 @@
   // Abfangen in der Capture-Phase, damit der Klick nicht zusätzlich den Link oder die Kachel auslöst.
   document.addEventListener('click', function (e) {
     var coin = e.target.closest && e.target.closest('.coin');
-    if (!coin) return;
+    if (!coin || coin.classList.contains('loader__coin')) return;
     e.preventDefault();
     e.stopPropagation();
     wechselVon(coin);

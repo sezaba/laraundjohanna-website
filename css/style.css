@@ -572,3 +572,53 @@ html.vt-wechsel .site *::after{transition:none !important}
 :root{--muenz-dauer:1.5s;--muenz-kurve:cubic-bezier(.2,.75,.25,1)}
 .coin__in,.topbar .coin__in,#sonne > .keep-tr{transition:transform var(--muenz-dauer) var(--muenz-kurve) !important}
 @media (prefers-reduced-motion:reduce){.coin__in,.topbar .coin__in,#sonne > .keep-tr{transition:none !important}}
+
+/* ---------- Ladeanimation ----------
+   Einmal pro Besuch: das Skript im <head> setzt html.has-loader/is-loading und blendet sie nach dem Laden aus.
+   Ohne JavaScript bleibt sie unsichtbar. Farben folgen Tag/Nacht. */
+.loader{display:none}
+html.has-loader .loader{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:var(--page);color:var(--ink);transition:opacity .7s ease .1s,visibility .7s ease .1s}
+html.is-loading body{overflow:hidden}
+.loader.is-done{opacity:0;visibility:hidden}
+.loader.is-done .loader__in{transform:scale(1.15);transition:transform .8s cubic-bezier(.6,0,.3,1)}
+.loader__in{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center}
+.loader__rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.loader__rings circle{fill:none;stroke:var(--orbit);stroke-width:1.2;opacity:.5;stroke-dasharray:900;stroke-dashoffset:900;animation:ringDraw 1.2s cubic-bezier(.6,0,.3,1) forwards}
+.loader__rings circle:nth-of-type(2){animation-delay:.15s}
+.loader__rings circle.dash{stroke-dasharray:3 7;stroke-dashoffset:0;opacity:0;animation:fadeIn .6s ease .45s forwards}
+.loader__pl{transform-origin:150px 150px;animation:ljspin 3s linear infinite}
+.loader__pl.p2{animation-duration:4.5s;animation-direction:reverse}
+.loader__pl.p3{animation-duration:6s}
+.loader__pl circle{fill:var(--orbit);stroke:none;opacity:1;stroke-dasharray:none;animation:none}
+.loader__coin{cursor:default}
+.loader__coin .coin__in{animation:loaderFlip 2.4s cubic-bezier(.65,0,.35,1) infinite}
+.theme-nacht .loader__coin .coin__in{animation-name:loaderFlipN}
+@keyframes ringDraw{to{stroke-dashoffset:0}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes loaderFlip{0%,20%{transform:rotateY(0)}50%,70%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+@keyframes loaderFlipN{0%,20%{transform:rotateY(180deg)}50%,70%{transform:rotateY(360deg)}100%{transform:rotateY(540deg)}}
+@media (prefers-reduced-motion:reduce){.loader *{animation:none!important}.loader__rings circle{stroke-dashoffset:0}.loader__rings circle.dash{opacity:.5}}
+
+/* ---------- 404: Seite im Orbit verirrt ---------- */
+.nf{position:relative;overflow:hidden;min-height:calc(100vh - 87px);min-height:calc(100svh - 87px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 0 100px;text-align:center}
+.nf__space{position:relative;width:min(760px,96vw);aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin:-40px 0 -90px}
+.nf__rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.nf__rings circle{fill:none;stroke:var(--orbit);stroke-width:1.5;opacity:.35}
+.nf__rings circle.dash{stroke-dasharray:4 10}
+.nf__pl{transform-origin:500px 500px;animation:ljspin 30s linear infinite}
+.nf__pl.b{animation-duration:45s;animation-direction:reverse}
+.nf__pl.c{animation-duration:70s}
+.nf__pl circle{fill:var(--orbit);stroke:none;opacity:1}
+.nf__num{position:relative;display:flex;align-items:center;gap:.06em;font-family:var(--f-display);font-size:clamp(150px,26vw,300px);line-height:1}
+.nf__num .coin{--s:.82em!important}
+.nf__num .coin__in{animation:nfSpin 6s cubic-bezier(.65,0,.35,1) infinite}
+.theme-nacht .nf__num .coin__in{animation-name:nfSpinN}
+@keyframes nfSpin{0%,40%{transform:rotateY(0)}50%,90%{transform:rotateY(360deg)}100%{transform:rotateY(360deg)}}
+@keyframes nfSpinN{0%,40%{transform:rotateY(180deg)}50%,90%{transform:rotateY(540deg)}100%{transform:rotateY(540deg)}}
+.nf__text{position:relative;width:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:22px;container-type:inline-size}
+.nf h1{margin:0;font-family:var(--f-serif);font-style:italic;font-weight:400;line-height:1.02;font-size:min(72px,calc(100cqw / 11))}
+.nf h1 span{display:block;white-space:nowrap}
+.nf .lead{max-width:34rem}
+.nf__ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:6px}
+@media (prefers-reduced-motion:reduce){.nf__pl,.nf__num .coin__in{animation:none}}
+@media (max-width:640px){.topbar .btn--klein{white-space:nowrap}}
