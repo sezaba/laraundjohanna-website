@@ -155,8 +155,6 @@ section,.footer{transition:background-color .7s ease}
 .gal > .tile{aspect-ratio:4 / 5}
 .gal > .tile:nth-child(n+9){display:none}
 .gal > .tile img{height:100%;object-fit:cover;object-position:50% 0}
-.gal > .tile{transition:transform .25s ease,box-shadow .25s ease,opacity .6s ease}
-.gal > .tile.is-wechsel{opacity:0}
 @media (min-width:901px) and (max-width:1180px){
   .gal{grid-template-columns:repeat(3,minmax(0,1fr))}
   .gal > .tile:nth-child(n+7){display:none}

@@ -244,11 +244,11 @@
 
   closeGallery = closeLightbox;
 
-  /* Desktop: nur ein festes Raster ist sichtbar (CSS). Alle paar Sekunden blendet ein Feld zu einem
-     gerade unsichtbaren Bild über. Dafür tauschen ein sichtbares und ein verstecktes Feld ihren Inhalt,
+  /* Desktop: nur ein festes Raster ist sichtbar (CSS). Alle paar Sekunden dreht sich ein Feld um
+     wie eine Karte und zeigt danach ein gerade unsichtbares Bild. Dafür tauschen ein sichtbares und ein verstecktes Feld ihren Inhalt,
      so bleiben alle Bilder im Dokument (fürs Karussell auf dem Handy und die Detailansicht). */
   var WECHSEL_ALLE_MS = 3800;
-  var BLENDE_MS = 600;
+  var DREH_MS = 380; // je Hälfte der Drehung
   var galZuletzt = null;
   var galUeber = false;
   var galImBild = true;
@@ -272,6 +272,17 @@
     if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Bild vergrößern: ' + ia.alt);
     if (b.hasAttribute('aria-label')) b.setAttribute('aria-label', 'Bild vergrößern: ' + ib.alt);
   }
+  // Neues Bild vorab laden, damit die Kachel nach der halben Drehung nicht leer ist (spätestens nach 3 s weiter)
+  function galVorladen(img, fertig) {
+    var v = new Image(), los = false;
+    function weiter() { if (!los) { los = true; fertig(); } }
+    v.onload = v.onerror = weiter;
+    if (img.getAttribute('sizes')) v.sizes = img.getAttribute('sizes');
+    if (img.getAttribute('srcset')) v.srcset = img.getAttribute('srcset');
+    v.src = img.getAttribute('src');
+    if (v.complete) weiter();
+    setTimeout(weiter, 3000);
+  }
   function galWechsel() {
     if (galBeschaeftigt || galUeber || !galImBild || document.hidden || galMobil.matches || lb.classList.contains('is-open')) return;
     var alle = Array.prototype.slice.call(gal.querySelectorAll('.tile:not(.is-klon)'));
@@ -282,21 +293,25 @@
     var neu = versteckt[Math.floor(Math.random() * versteckt.length)];
     galBeschaeftigt = true;
     galZuletzt = feld;
-    feld.classList.add('is-wechsel');
-    setTimeout(function () {
-      // Das neue Bild erst einblenden, wenn es geladen ist (spätestens nach 3 s)
-      var img = feld.querySelector('img');
-      var fertig = false;
-      function zeigen() {
-        if (fertig) return; fertig = true;
-        feld.classList.remove('is-wechsel');
-        setTimeout(function () { galBeschaeftigt = false; }, BLENDE_MS);
-      }
-      img.loading = 'eager';
-      galTausche(feld, neu);
-      if (img.complete) zeigen();
-      else { img.addEventListener('load', zeigen, { once: true }); img.addEventListener('error', zeigen, { once: true }); setTimeout(zeigen, 3000); }
-    }, BLENDE_MS);
+    galVorladen(neu.querySelector('img'), function () {
+      if (!feld.animate) { galTausche(feld, neu); galBeschaeftigt = false; return; }
+      // Erste Hälfte: Kachel klappt weg, bis sie hochkant steht. Dann Motiv tauschen,
+      // zweite Hälfte: von der anderen Seite zurück in die Fläche.
+      var weg = feld.animate(
+        [{ transform: 'perspective(1100px) rotateY(0deg)' }, { transform: 'perspective(1100px) rotateY(90deg)' }],
+        { duration: DREH_MS, easing: 'cubic-bezier(.55,0,.85,.35)', fill: 'forwards' }
+      );
+      weg.onfinish = function () {
+        feld.querySelector('img').loading = 'eager';
+        galTausche(feld, neu);
+        var zurueck = feld.animate(
+          [{ transform: 'perspective(1100px) rotateY(-90deg)' }, { transform: 'perspective(1100px) rotateY(0deg)' }],
+          { duration: DREH_MS, easing: 'cubic-bezier(.15,.65,.45,1)' }
+        );
+        weg.cancel();
+        zurueck.onfinish = zurueck.oncancel = function () { galBeschaeftigt = false; };
+      };
+    });
   }
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(galWechsel, WECHSEL_ALLE_MS);
   }
