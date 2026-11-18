@@ -17,10 +17,12 @@ console.log(JSON.stringify(c.window.LJ_DATA));
 class Content(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.packages, self.faq, self.texts = [], [], []
+        self.packages, self.faq, self.texts, self.alts = [], [], [], []
         self.card = self.question = None
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'img':
+            self.alts.append(attrs.get('alt', ''))
         if tag == 'article' and 'pk' in attrs.get('class', '').split():
             self.card = []
         if tag == 'details':
@@ -45,7 +47,10 @@ home = (root / 'index.html').read_text()
 old_home = subprocess.check_output(['git', 'show', '1563b70:index.html'], cwd=root, text=True)
 for section in ['galerie', 'ueber-uns', 'kontakt']:
     pattern = rf'<section\b[^>]*\bid="{section}"[^>]*>[\s\S]*?</section>'
-    assert re.search(pattern, old_home)[0] == re.search(pattern, home)[0], section
+    old_section, new_section = Content(), Content()
+    old_section.feed(re.search(pattern, old_home)[0])
+    new_section.feed(re.search(pattern, home)[0])
+    assert old_section.texts == new_section.texts and old_section.alts == new_section.alts, section
 dialog = r'<dialog class="pop pop--kontakt"[\s\S]*?</dialog>'
 assert re.search(dialog, old_home)[0] == re.search(dialog, home)[0], 'Contact form changed'
 

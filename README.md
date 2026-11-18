@@ -23,6 +23,7 @@ tools/build-service-pages.mjs  Erzeugt Leistungsseiten, Kacheln, FAQ und Sitemap
 tools/check-service-content.py  Prüft wortgleiche Übernahme der abgestimmten Inhalte
 js/booking.js       Cal.com-Terminbuchung im Fenster (Erstgespräch)
 assets/img/         Galerie- und Teamfotos
+assets/img/optimized/  WebP-Varianten für unterschiedliche Bildschirmgrößen
 assets/fonts/       Schriften Anton, Instrument Serif, Space Grotesk (lokal, Lizenzen in LICENSES.txt)
 assets/favicon.svg  Sonnen-Symbol als Favicon
 ```
@@ -38,6 +39,20 @@ assets/favicon.svg  Sonnen-Symbol als Favicon
 - **Galerie-Bilder:** Datei nach `assets/img/` legen und in `index.html` im Abschnitt
   `id="galerie"` eintragen. Bilder mit `tile--preview` erscheinen mobil in der Vorschau.
 - **Texte ohne Gedankenstriche schreiben.**
+
+## Bilder und Ladeleistung
+
+Die Originalbilder in `assets/img/` bleiben erhalten. Die Galerie und das Teamfoto
+verwenden WebP-Varianten mit `srcset`, passenden `sizes` und intrinsischen Abmessungen.
+Die Galerie-Lightbox lädt bei Bedarf weiterhin das Originalbild; vor dem Öffnen
+hat ihr Bild kein `src` und verursacht keinen unnötigen Download.
+
+Nach einem Bildaustausch `node tools/optimize-images.mjs` ausführen, anschließend
+`node tools/build-service-pages.mjs`. Nur das Optimierungsskript benötigt das lokale
+Node-Modul `sharp`; alternativ lässt es sich über `SHARP_MODULE_PATH` bereitstellen.
+Website und normales Erzeugen der Leistungsseiten benötigen es nicht. Originale
+und erzeugte Varianten gemeinsam committen; Bildinhalte und Alternativtexte bleiben
+bei der Optimierung unverändert.
 
 ## Terminbuchung
 

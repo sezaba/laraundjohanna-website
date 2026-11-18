@@ -211,7 +211,7 @@
     function open() {
       if (galMobil.matches) return;
       lastFocus = tile;
-      lbImg.src = img.currentSrc || img.src;
+      lbImg.src = img.getAttribute('data-full-src') || img.currentSrc || img.src;
       lbImg.alt = img.alt;
       lbCap.textContent = tile.querySelector('figcaption').textContent;
       lb.classList.add('is-open');

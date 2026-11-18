@@ -27,7 +27,6 @@ const faqBlock = `<!-- faq:start -->\n${panels}\n<!-- faq:end -->`;
 if (home.includes('<!-- faq:start -->')) home = home.replace(/<!-- faq:start -->[\s\S]*?<!-- faq:end -->/, faqBlock);
 else home = home.replace('<div class="qa" role="tabpanel" id="qa" aria-live="polite"></div>', `<div class="qa" id="qa">${faqBlock}</div>`);
 home = home.replace(/<!-- Paket-Popup -->[\s\S]*?<\/dialog>\s*/, '');
-home = home.replace(/js\/main\.js\?v=[^" ]+/, 'js/main.js?v=20261118-leistungsseiten');
 if (!home.includes('css/service.css')) home = home.replace('</head>', '<link rel="stylesheet" href="css/service.css?v=20261118-leistungsseiten">\n</head>');
 write('index.html', home);
 
