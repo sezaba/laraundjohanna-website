@@ -36,7 +36,7 @@ html = html.replace(/<img\b[^>]*>/g, tag => {
   const fallback = item.variants.find(v => v.width >= 640) || item.variants.at(-1);
   const sizes = original.endsWith('lara-und-johanna.jpg')
     ? '(max-width: 1080px) calc(100vw - 40px), 580px'
-    : '(max-width: 900px) calc(100vw - 124px), (max-width: 1280px) calc((100vw - 120px) / 3), 387px';
+    : '(max-width: 900px) calc(100vw - 124px), (max-width: 1180px) calc((100vw - 112px) / 3), 290px';
   const srcset = item.variants.map(v => `${v.src} ${v.width}w`).join(', ');
   return tag.replace(/\s+(src|srcset|sizes|width|height|decoding|data-full-src)="[^"]*"/g, '')
     .replace(/>$/, ` src="${fallback.src}" srcset="${srcset}" sizes="${sizes}" width="${item.width}" height="${item.height}" decoding="async" data-full-src="${original}">`);

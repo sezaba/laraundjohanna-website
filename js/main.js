@@ -129,6 +129,15 @@
   if ($('gal')) {
   /* ---------- Galerie: mobil aufklappen + Lightbox ---------- */
   var gal = $('gal');
+  // Bei jedem Laden neu gemischt (Fisher-Yates), damit die Galerie jedes Mal anders aussieht
+  (function () {
+    var t = Array.prototype.slice.call(gal.querySelectorAll('.tile'));
+    for (var i = t.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var x = t[i]; t[i] = t[j]; t[j] = x;
+    }
+    t.forEach(function (tile) { gal.appendChild(tile); });
+  })();
   // Mobil: Endlos-Karussell. Vor und hinter die echten Bilder kommt je eine Kopie aller Bilder.
   // Landet man nach dem Wischen in einer Kopie, springt das Karussell unsichtbar zum passenden echten Bild.
   var galTiles = Array.prototype.slice.call(gal.querySelectorAll('.tile'));
@@ -234,6 +243,62 @@
   lb.addEventListener('click', function (e) { if (e.target === lb || e.target.closest('[data-close]')) closeLightbox(); });
 
   closeGallery = closeLightbox;
+
+  /* Desktop: nur ein festes Raster ist sichtbar (CSS). Alle paar Sekunden blendet ein Feld zu einem
+     gerade unsichtbaren Bild über. Dafür tauschen ein sichtbares und ein verstecktes Feld ihren Inhalt,
+     so bleiben alle Bilder im Dokument (fürs Karussell auf dem Handy und die Detailansicht). */
+  var WECHSEL_ALLE_MS = 3800;
+  var BLENDE_MS = 600;
+  var galZuletzt = null;
+  var galUeber = false;
+  var galImBild = true;
+  var galBeschaeftigt = false;
+  var ATTRIBUTE = ['src', 'srcset', 'sizes', 'width', 'height', 'alt', 'data-full-src'];
+  gal.addEventListener('mouseenter', function () { galUeber = true; });
+  gal.addEventListener('mouseleave', function () { galUeber = false; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) { galImBild = e[0].isIntersecting; }).observe(gal);
+  }
+  function galSichtbar(tile) { return tile.offsetParent !== null; }
+  function galTausche(a, b) {
+    var ia = a.querySelector('img'), ib = b.querySelector('img');
+    ATTRIBUTE.forEach(function (n) {
+      var va = ia.getAttribute(n), vb = ib.getAttribute(n);
+      if (vb == null) ia.removeAttribute(n); else ia.setAttribute(n, vb);
+      if (va == null) ib.removeAttribute(n); else ib.setAttribute(n, va);
+    });
+    var ca = a.querySelector('figcaption span'), cb = b.querySelector('figcaption span');
+    var t = ca.textContent; ca.textContent = cb.textContent; cb.textContent = t;
+    if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Bild vergrößern: ' + ia.alt);
+    if (b.hasAttribute('aria-label')) b.setAttribute('aria-label', 'Bild vergrößern: ' + ib.alt);
+  }
+  function galWechsel() {
+    if (galBeschaeftigt || galUeber || !galImBild || document.hidden || galMobil.matches || lb.classList.contains('is-open')) return;
+    var alle = Array.prototype.slice.call(gal.querySelectorAll('.tile:not(.is-klon)'));
+    var sichtbar = alle.filter(function (t) { return galSichtbar(t) && t !== galZuletzt && t !== document.activeElement; });
+    var versteckt = alle.filter(function (t) { return !galSichtbar(t); });
+    if (!sichtbar.length || !versteckt.length) return;
+    var feld = sichtbar[Math.floor(Math.random() * sichtbar.length)];
+    var neu = versteckt[Math.floor(Math.random() * versteckt.length)];
+    galBeschaeftigt = true;
+    galZuletzt = feld;
+    feld.classList.add('is-wechsel');
+    setTimeout(function () {
+      // Das neue Bild erst einblenden, wenn es geladen ist (spätestens nach 3 s)
+      var img = feld.querySelector('img');
+      var fertig = false;
+      function zeigen() {
+        if (fertig) return; fertig = true;
+        feld.classList.remove('is-wechsel');
+        setTimeout(function () { galBeschaeftigt = false; }, BLENDE_MS);
+      }
+      img.loading = 'eager';
+      galTausche(feld, neu);
+      if (img.complete) zeigen();
+      else { img.addEventListener('load', zeigen, { once: true }); img.addEventListener('error', zeigen, { once: true }); setTimeout(zeigen, 3000); }
+    }, BLENDE_MS);
+  }
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(galWechsel, WECHSEL_ALLE_MS);
   }
 
   /* ---------- Zurück-Taste/Wischgeste schließt Popups ---------- */
