@@ -1,0 +1,27 @@
+/* Bestehende Paketgestaltung als eigenständige Leistungsseite. */
+.kachel{position:relative}
+.kachel__more{text-decoration:none}
+.kachel__more::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.kachel:focus-within{outline:3px solid var(--accent);outline-offset:5px}
+.gespraech__coin{position:relative;z-index:1}
+.service{padding:48px 0 88px;background:var(--pop-bg)}
+.service__back{display:inline-block;color:var(--ink);text-underline-offset:4px;margin-bottom:40px}
+.service__head{max-width:980px;margin-bottom:48px}
+.service h1{font:400 clamp(48px,7vw,96px)/1 var(--f-display);margin:0 0 24px;text-wrap:balance}
+.service__head .lead{max-width:52rem}
+.service__head .pop__intro{margin:28px 0 0;max-width:52rem}
+.service__label{font:500 24px/1.3 var(--f-sans);margin:0 0 28px}
+.service .pop__grid{align-items:stretch}
+.service .pk__name{line-height:1.35}
+.service .pop__foot-r{display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+.service .pop__qa{white-space:normal;line-height:1.5}
+.service + .fragen{padding:88px 0}
+@media(max-width:640px){
+  .service{padding:28px 0 56px}
+  .service__back{margin-bottom:32px}
+  .service__head{margin-bottom:36px}
+  .service .pk{padding:24px}
+  .service .pop__grid{gap:22px}
+  .service + .fragen{padding:56px 0}
+  .service + .fragen .h2{font-size:clamp(32px,8vw,40px)}
+}

@@ -1,7 +1,8 @@
 # laraundjohanna Website
 
 Website der laraundjohanna GbR, Kreativstudio aus Hamburg.
-Reines HTML, CSS und JavaScript, ohne Build-Schritt und ohne Abhängigkeiten.
+Reines HTML, CSS und JavaScript, ohne externe Abhängigkeiten. Die statischen
+Leistungsseiten werden vor dem Commit mit dem enthaltenen Node-Skript erzeugt.
 
 Live: https://laraundjohanna.de
 Hosting: Cloudflare Pages, Projekt `laraundjohanna-website`.
@@ -15,7 +16,11 @@ datenschutz.html    Datenschutzerklärung
 css/style.css       Gestaltung inkl. Tag- und Nachtmodus
 css/booking.css     Fenster für die Terminbuchung
 js/data.js          INHALTE: Angebote, Pakete, Preise, Fragen & Antworten
-js/main.js          Interaktion (Tag/Nacht, Menü, Galerie, Popups, Kontaktformular, FAQ)
+js/main.js          Interaktion (Tag/Nacht, Menü, Galerie, Kontaktformular, FAQ)
+css/service.css     Leistungsseiten und verlinkte Angebotskacheln
+*.html             Zusätzlich je eine statische Seite pro Leistung
+tools/build-service-pages.mjs  Erzeugt Leistungsseiten, Kacheln, FAQ und Sitemap
+tools/check-service-content.py  Prüft wortgleiche Übernahme der abgestimmten Inhalte
 js/booking.js       Cal.com-Terminbuchung im Fenster (Erstgespräch)
 assets/img/         Galerie- und Teamfotos
 assets/fonts/       Schriften Anton, Instrument Serif, Space Grotesk (lokal, Lizenzen in LICENSES.txt)
@@ -24,9 +29,11 @@ assets/favicon.svg  Sonnen-Symbol als Favicon
 
 ## Inhalte ändern
 
-- **Preise, Pakete, Angebote, FAQ:** nur `js/data.js` bearbeiten. Kacheln, Popups,
-  Footer-Liste und FAQ-Tabs werden daraus automatisch erzeugt. Welche Felder es gibt,
-  steht oben in der Datei.
+- **Preise, Pakete, Angebote, FAQ:** die Quelle bleibt `js/data.js`. Danach
+  `node tools/build-service-pages.mjs` ausführen und die erzeugten HTML-Dateien und
+  `sitemap.xml` mit committen. Das Skript erzeugt die statischen Kacheln, Leistungsseiten,
+  Footer-Liste und FAQ-Inhalte. Welche Felder es gibt, steht oben in der Inhaltsdatei.
+  Die Website benötigt zur Darstellung der Pakete und FAQ kein JavaScript.
 - **Texte der Abschnitte (Hero, Über uns, Kontakt …):** direkt in `index.html`.
 - **Galerie-Bilder:** Datei nach `assets/img/` legen und in `index.html` im Abschnitt
   `id="galerie"` eintragen. Bilder mit `tile--preview` erscheinen mobil in der Vorschau.
@@ -66,7 +73,8 @@ Besucher versprochen. Direktantworten auf die Benachrichtigung gehen an das `ema
 
 ## Tastatur und Cache
 
-Kontakt, Pakete und Galerie verwenden native modale `dialog`-Elemente. Escape schließt
+Kontakt und Galerie verwenden native modale `dialog`-Elemente. Pakete öffnen als
+eigene Leistungsseiten. Escape schließt
 nur das oberste Fenster; der Fokus kehrt zum Auslöser zurück. Die FAQ-Tabs unterstützen
 Pfeiltasten, Home und End. Der Skip-Link fokussiert den vollständigen Hauptinhalt.
 
