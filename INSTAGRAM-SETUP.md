@@ -1,6 +1,6 @@
 # Instagram-Feed
 
-Vorbereitet am 24. November 2026, noch nicht veröffentlicht.
+Am 24. November 2026 mit fünf echten Studio-Beiträgen lokal geprüft. Noch nicht veröffentlicht.
 
 Der Bereich steht auf der Startseite direkt vor dem Footer. Er zeigt bis zu sechs
 aktuelle Beiträge von `@laraundjohanna`, auf kleinen Bildschirmen in zwei Spalten.
@@ -9,18 +9,17 @@ Es sind keine Beispielbeiträge eingebaut.
 
 ## Noch erforderlich
 
-1. Instagram-Lesezugriff für **laraundjohanna** abschließen. Die vorhandene lokale
-   Studio-Social-Verbindung gehört zum Zeitpunkt der Prüfung zu **chapter_yourbookclub**.
+1. Erledigt: Instagram-Verbindung für **laraundjohanna** ist gespeichert. Profil
+   und fünf Beiträge erfolgreich über die API geprüft. Lese- und Veröffentlichungsrechte
+   wurden ausdrücklich freigegeben; der Feed verwendet nur lesende Abrufe.
 2. Im Cloudflare-Pages-Projekt `laraundjohanna-website` als verschlüsselte Secrets
    `INSTAGRAM_ACCESS_TOKEN` und `INSTAGRAM_USER_ID` für das Studio-Konto hinterlegen.
    Token nicht in Dateien, Browser-Code, Git oder Chat kopieren.
 3. Passend zum Login `INSTAGRAM_API_HOST` (`graph.facebook.com` oder
    `graph.instagram.com`) und `INSTAGRAM_API_VERSION` (Vorgabe `v27.0`) setzen.
    Lesezugriff reicht aus; der Feed benötigt keine Veröffentlichungsrechte.
-4. Datenschutzhinweis vor Veröffentlichung anpassen: Beiträge und Vorschaubilder
-   werden über den eigenen Cloudflare-Endpunkt ausgeliefert. Der Browser baut erst
-   beim Klick auf einen Beitragslink eine direkte Instagram-Verbindung auf.
-   Der bisherige Satz „Es werden keine Beiträge … eingebettet“ passt dann nicht mehr.
+4. Erledigt: Datenschutzhinweis beschreibt die Auslieferung über Cloudflare und
+   die direkte Instagram-Verbindung erst beim Klick auf Profil- oder Beitragslinks.
 5. Cloudflare Pages Functions für `functions/api/instagram.js` mit bereitstellen.
    Echten Feed, Bilder, Handyansicht und Fehlerfall prüfen, dann auf `main` veröffentlichen.
 
@@ -35,5 +34,7 @@ Tokens müssen vor ihrem Ablauf erneuert werden; ein Fehler zeigt den Profil-Lin
 
 `node tools/check-instagram.mjs` prüft simulierte API-Antworten inklusive falschem
 Konto, fremden Bild-URLs, Cache, Bild-Proxy und Schutz der Zugangsdaten.
-`python3 -m http.server 8765 --bind 127.0.0.1` zeigt die statische Vorschau und den
-Fallback. Für den echten API-Endpunkt ist die Cloudflare-Laufzeit erforderlich.
+`node tools/preview-instagram.mjs` startet auf `http://127.0.0.1:8765/#instagram`
+die Vorschau mit echten Beiträgen. Der lokale Adapter führt dieselbe Function aus
+und liest die vorhandene Studio-Social-Verbindung ausschließlich in den Arbeitsspeicher.
+Er ist nur lokal erreichbar. Keine Zugangsdaten in `.env` oder Website-Dateien ablegen.
