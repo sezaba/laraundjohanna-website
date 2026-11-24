@@ -39,7 +39,7 @@ export async function onRequestGet(context) {
       stage = 'upstream-request';
       const response = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
-        signal: AbortSignal.timeout(12000), redirect: 'error',
+        signal: AbortSignal.timeout(12000), redirect: 'manual',
       });
       stage = `upstream-${response.status}`;
       if (!response.ok) throw new Error('Instagram unavailable');
@@ -68,7 +68,7 @@ export async function onRequestGet(context) {
       const imageKey = new Request(`${url.origin}/__instagram-image/${imageId}`);
       const cachedImage = await cache.match(imageKey);
       if (cachedImage) return cachedImage;
-      const response = await fetch(post.image, { redirect: 'error', signal: AbortSignal.timeout(12000) });
+      const response = await fetch(post.image, { redirect: 'manual', signal: AbortSignal.timeout(12000) });
       const type = response.headers.get('Content-Type')?.split(';')[0];
       if (!response.ok || !['image/jpeg', 'image/png', 'image/webp'].includes(type)) throw new Error('Image unavailable');
       const result = new Response(response.body, { headers: {

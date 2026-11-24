@@ -20,11 +20,13 @@ try {
   let calls = 0;
   globalThis.fetch = async (url, options) => {
     calls++;
+    assert.equal(options.redirect, 'manual', 'Use a redirect mode supported by Cloudflare');
     assert.equal(options.headers.Authorization, 'Bearer test-secret');
     return Response.json({ username: 'chapter_yourbookclub', media: { data: [] } });
   };
   assert.equal((await run()).status, 503, 'Reject another Instagram account');
-  globalThis.fetch = async () => {
+  globalThis.fetch = async (url, options) => {
+    assert.equal(options.redirect, 'manual');
     calls++;
     return Response.json({ username: 'laraundjohanna', media: { data: [
       { id: '1', caption: '<script>test</script>', media_type: 'IMAGE', media_url: 'https://s.cdninstagram.com/1.jpg', permalink: 'https://www.instagram.com/p/Test/', timestamp: '2026-11-24T10:00:00Z' },
@@ -41,7 +43,8 @@ try {
   assert.equal((await run()).status, 200);
   assert.equal(calls, before, 'Reuse cached feed');
   assert.equal((await run('?image=99')).status, 404);
-  globalThis.fetch = async url => {
+  globalThis.fetch = async (url, options) => {
+    assert.equal(options.redirect, 'manual');
     assert.equal(url, 'https://s.cdninstagram.com/1.jpg');
     return new Response('image', { headers: { 'Content-Type': 'image/jpeg', 'Set-Cookie': 'upstream=secret' } });
   };
