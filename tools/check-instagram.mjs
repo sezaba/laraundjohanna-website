@@ -12,7 +12,7 @@ const env = { INSTAGRAM_ACCESS_TOKEN: 'test-secret', INSTAGRAM_USER_ID: '123' };
 const pending = [];
 const run = (suffix = '', config = env) => onRequestGet({
   request: new Request(`https://example.test/api/instagram${suffix}`), env: config,
-  waitUntil: promise => pending.push(promise),
+  waitUntil(promise) { assert.equal(this.env, config, 'Retain Cloudflare context binding'); pending.push(promise); },
 });
 try {
   assert.equal((await run('', {})).status, 503);

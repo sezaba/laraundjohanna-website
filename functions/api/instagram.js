@@ -12,7 +12,8 @@ const imageURL = value => {
   } catch { return null; }
 };
 
-export async function onRequestGet({ request, env, waitUntil }) {
+export async function onRequestGet(context) {
+  const { request, env } = context;
   if (!env.INSTAGRAM_ACCESS_TOKEN || !/^\d+$/.test(env.INSTAGRAM_USER_ID || '')) {
     return json({ posts: [], available: false }, 503, 'not-configured');
   }
@@ -57,7 +58,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
           permalink: permalink.href, timestamp: post.timestamp, type: post.media_type, image }];
       }).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 50);
       stage = 'cache-write';
-      waitUntil(cache.put(key, new Response(JSON.stringify(posts), {
+      context.waitUntil(cache.put(key, new Response(JSON.stringify(posts), {
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=900' },
       })));
     }
@@ -74,7 +75,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
         'Content-Type': type, 'Cache-Control': 'public, max-age=3600',
         'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'none'", 
       } });
-      waitUntil(cache.put(imageKey, result.clone()));
+      context.waitUntil(cache.put(imageKey, result.clone()));
       return result;
     }
     return json({ available: true, posts: posts.map(({ image, ...post }) => ({ ...post, image: `/api/instagram?image=${post.id}` })) });
