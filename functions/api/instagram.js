@@ -31,7 +31,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
     if (stored) posts = await stored.json();
     else {
       const endpoint = new URL(`https://${host}/${version}/${env.INSTAGRAM_USER_ID}`);
-      endpoint.searchParams.set('fields', 'username,media.limit(12){id,caption,media_type,media_url,thumbnail_url,permalink,timestamp}');
+      endpoint.searchParams.set('fields', 'username,media.limit(50){id,caption,media_type,media_url,thumbnail_url,permalink,timestamp}');
       const response = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
         signal: AbortSignal.timeout(12000), redirect: 'error',
@@ -47,7 +47,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
           permalink.hostname !== 'www.instagram.com' || !/^\/(p|reel)\/[\w-]+\/$/.test(permalink.pathname)) return [];
         return [{ id: post.id, caption: String(post.caption || '').slice(0, 2200),
           permalink: permalink.href, timestamp: post.timestamp, type: post.media_type, image }];
-      }).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 6);
+      }).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 50);
       waitUntil(cache.put(key, new Response(JSON.stringify(posts), {
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=900' },
       })));

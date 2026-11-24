@@ -2,11 +2,13 @@
 
 Am 24. November 2026 mit fünf echten Studio-Beiträgen lokal geprüft. Noch nicht veröffentlicht.
 
-Der Bereich steht auf der Startseite direkt vor dem Footer. Er zeigt auf Desktop
-die drei neuesten Beiträge von `@laraundjohanna` in einer Zeile. Unter 768 Pixeln
-ist ausschließlich der zuletzt veröffentlichte Beitrag sichtbar. Weitere Beiträge
-bleiben ausgeblendet; es gibt keine zweite Zeile. Die API liefert bis zu sechs
-Beiträge, sodass nach einem Bildfehler ein nachfolgender Beitrag nachrücken kann.
+Der Bereich steht auf der Startseite direkt vor dem Footer. Er nutzt die volle
+Fensterbreite mit den bestehenden Seitenabständen. Auf Desktop passen so viele
+aktuelle Beiträge von `@laraundjohanna` in genau eine Zeile, wie bei mindestens
+300 Pixeln Bildbreite Platz haben. Die sichtbaren Bilder verteilen sich gleichmäßig
+auf die Zeile. Unter 768 Pixeln ist nur der neueste Beitrag sichtbar. Größenänderungen
+berechnet ein ResizeObserver ohne Neuladen. Die API liefert bis zu 50 echte Beiträge;
+weitere bleiben ausgeblendet, nach einem Bildfehler kann ein Beitrag nachrücken.
 Bei fehlender Verbindung oder einem Fehler bleibt ein Link zum echten Profil.
 Es sind keine Beispielbeiträge eingebaut.
 
@@ -32,6 +34,10 @@ Eine neue Anfrage nach Cache-Ablauf aktualisiert die Beiträge automatisch.
 Der Abruf beginnt erst in der Nähe des sichtbaren Bereichs. Es werden keine
 Instagram-Skripte, Tracker oder fremden Cookies in den Browser eingebunden.
 Tokens müssen vor ihrem Ablauf erneuert werden; ein Fehler zeigt den Profil-Link.
+Die aktuelle Unified-Login-Verbindung läuft laut gespeicherter Freigabe am
+23. Januar 2027 ab. Eine automatische Token-Verlängerung ist nicht eingerichtet.
+Der vorhandene Refresh-Befehl unterstützt nur Instagram-Login-Tokens,
+nicht die hier genutzte Verbindung über graph.facebook.com.
 
 ## Prüfen
 
