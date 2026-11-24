@@ -2,8 +2,11 @@
 
 Am 24. November 2026 mit fünf echten Studio-Beiträgen lokal geprüft. Noch nicht veröffentlicht.
 
-Der Bereich steht auf der Startseite direkt vor dem Footer. Er zeigt bis zu sechs
-aktuelle Beiträge von `@laraundjohanna`, auf kleinen Bildschirmen in zwei Spalten.
+Der Bereich steht auf der Startseite direkt vor dem Footer. Er zeigt auf Desktop
+die drei neuesten Beiträge von `@laraundjohanna` in einer Zeile. Unter 768 Pixeln
+ist ausschließlich der zuletzt veröffentlichte Beitrag sichtbar. Weitere Beiträge
+bleiben ausgeblendet; es gibt keine zweite Zeile. Die API liefert bis zu sechs
+Beiträge, sodass nach einem Bildfehler ein nachfolgender Beitrag nachrücken kann.
 Bei fehlender Verbindung oder einem Fehler bleibt ein Link zum echten Profil.
 Es sind keine Beispielbeiträge eingebaut.
 
