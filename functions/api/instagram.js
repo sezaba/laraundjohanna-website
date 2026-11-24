@@ -1,7 +1,9 @@
 // Cloudflare Pages Function. Credentials belong in encrypted environment secrets.
 const PROFILE = 'laraundjohanna';
 const headers = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
-const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers });
+const json = (body, status = 200, diagnostic) => new Response(JSON.stringify(body), {
+  status, headers: { ...headers, ...(diagnostic ? { 'X-Instagram-Status': diagnostic } : {}) },
+});
 const imageURL = value => {
   try {
     const url = new URL(value);
@@ -12,7 +14,7 @@ const imageURL = value => {
 
 export async function onRequestGet({ request, env, waitUntil }) {
   if (!env.INSTAGRAM_ACCESS_TOKEN || !/^\d+$/.test(env.INSTAGRAM_USER_ID || '')) {
-    return json({ posts: [], available: false }, 503);
+    return json({ posts: [], available: false }, 503, 'not-configured');
   }
   const url = new URL(request.url);
   const imageId = url.searchParams.get('image');
@@ -20,11 +22,12 @@ export async function onRequestGet({ request, env, waitUntil }) {
   const host = env.INSTAGRAM_API_HOST || 'graph.facebook.com';
   const version = env.INSTAGRAM_API_VERSION || 'v27.0';
   if (!['graph.facebook.com', 'graph.instagram.com'].includes(host) || !/^v\d+\.\d+$/.test(version)) {
-    return json({ posts: [], available: false }, 503);
+    return json({ posts: [], available: false }, 503, 'invalid-config');
   }
   const cache = caches.default;
   // Separate cached data from the public response; upstream image URLs stay server-side.
   const key = new Request(`${url.origin}/__instagram-cache/${env.INSTAGRAM_USER_ID}/${host}/${version}`);
+  let stage = 'cache-read';
   try {
     let stored = await cache.match(key);
     let posts;
@@ -32,13 +35,18 @@ export async function onRequestGet({ request, env, waitUntil }) {
     else {
       const endpoint = new URL(`https://${host}/${version}/${env.INSTAGRAM_USER_ID}`);
       endpoint.searchParams.set('fields', 'username,media.limit(50){id,caption,media_type,media_url,thumbnail_url,permalink,timestamp}');
+      stage = 'upstream-request';
       const response = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${env.INSTAGRAM_ACCESS_TOKEN}` },
         signal: AbortSignal.timeout(12000), redirect: 'error',
       });
+      stage = `upstream-${response.status}`;
       if (!response.ok) throw new Error('Instagram unavailable');
+      stage = 'upstream-json';
       const data = await response.json();
+      stage = 'account-mismatch';
       if (data.username?.toLowerCase() !== PROFILE) throw new Error('Wrong account');
+      stage = 'media-parse';
       posts = (data.media?.data || []).flatMap(post => {
         let permalink;
         try { permalink = new URL(post.permalink); } catch { return []; }
@@ -48,6 +56,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
         return [{ id: post.id, caption: String(post.caption || '').slice(0, 2200),
           permalink: permalink.href, timestamp: post.timestamp, type: post.media_type, image }];
       }).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 50);
+      stage = 'cache-write';
       waitUntil(cache.put(key, new Response(JSON.stringify(posts), {
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=900' },
       })));
@@ -71,6 +80,6 @@ export async function onRequestGet({ request, env, waitUntil }) {
     return json({ available: true, posts: posts.map(({ image, ...post }) => ({ ...post, image: `/api/instagram?image=${post.id}` })) });
   } catch {
     // Do not expose Graph API errors, URLs or account credentials.
-    return json({ posts: [], available: false }, 503);
+    return json({ posts: [], available: false }, 503, stage);
   }
 }
