@@ -3,6 +3,7 @@ Thumbs.db
 desktop.ini
 .env
 .env.*
+.dev.vars*
 node_modules/
 .wrangler/
 .claude/
