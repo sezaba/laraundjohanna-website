@@ -1,6 +1,7 @@
 # Instagram-Feed
 
-Am 24. November 2026 mit fünf echten Studio-Beiträgen lokal geprüft. Noch nicht veröffentlicht.
+Am 24. November 2026 auf https://laraundjohanna.de/#instagram veröffentlicht.
+Live-Endpunkt und alle sechs aktuellen Vorschaubilder erfolgreich mit HTTP 200 geprüft.
 
 Der Bereich steht auf der Startseite direkt vor dem Footer. Er nutzt die volle
 Fensterbreite mit den bestehenden Seitenabständen. Auf Desktop passen so viele
@@ -12,21 +13,28 @@ weitere bleiben ausgeblendet, nach einem Bildfehler kann ein Beitrag nachrücken
 Bei fehlender Verbindung oder einem Fehler bleibt ein Link zum echten Profil.
 Es sind keine Beispielbeiträge eingebaut.
 
-## Noch erforderlich
+## Einrichtung
 
 1. Erledigt: Instagram-Verbindung für **laraundjohanna** ist gespeichert. Profil
    und fünf Beiträge erfolgreich über die API geprüft. Lese- und Veröffentlichungsrechte
    wurden ausdrücklich freigegeben; der Feed verwendet nur lesende Abrufe.
-2. Im Cloudflare-Pages-Projekt `laraundjohanna-website` als verschlüsselte Secrets
-   `INSTAGRAM_ACCESS_TOKEN` und `INSTAGRAM_USER_ID` für das Studio-Konto hinterlegen.
+2. Erledigt: Im Produktionsprojekt `laraundjohanna-website` ist
+   `INSTAGRAM_ACCESS_TOKEN` verschlüsselt gespeichert, `INSTAGRAM_USER_ID` ist gesetzt.
    Token nicht in Dateien, Browser-Code, Git oder Chat kopieren.
-3. Passend zum Login `INSTAGRAM_API_HOST` (`graph.facebook.com` oder
-   `graph.instagram.com`) und `INSTAGRAM_API_VERSION` (Vorgabe `v27.0`) setzen.
+3. Der Server nutzt die passenden Standardwerte `graph.facebook.com` und `v27.0`.
+   Bei Wechsel des Anmeldewegs lassen sich `INSTAGRAM_API_HOST` und
+   `INSTAGRAM_API_VERSION` entsprechend anpassen.
    Lesezugriff reicht aus; der Feed benötigt keine Veröffentlichungsrechte.
 4. Erledigt: Datenschutzhinweis beschreibt die Auslieferung über Cloudflare und
    die direkte Instagram-Verbindung erst beim Klick auf Profil- oder Beitragslinks.
-5. Cloudflare Pages Functions für `functions/api/instagram.js` mit bereitstellen.
-   Echten Feed, Bilder, Handyansicht und Fehlerfall prüfen, dann auf `main` veröffentlichen.
+5. Erledigt: Pages Function auf `main` veröffentlicht und neu mit den Variablen
+   bereitgestellt. `_routes.json` beschränkt Functions auf `/api/instagram`.
+   Feed und Bilder live geprüft; Handyansicht und Größenänderungen in der Vorschau geprüft.
+
+Cloudflare unterstützt für ausgehende Abrufe `redirect: 'manual'`; Weiterleitungen
+werden nicht verfolgt. Cache-Aufgaben behalten mit `context.waitUntil()` die Laufzeitbindung.
+Bei Fehlern nennt `X-Instagram-Status` ausschließlich den fehlgeschlagenen Schritt,
+ohne Instagram-Fehlerantworten oder Zugangsdaten offenzulegen.
 
 Der Server prüft den Instagram-Nutzernamen und weist andere Konten zurück.
 Feed-Daten werden bis zu 15 Minuten zwischengespeichert, Bilder bis zu einer Stunde.
